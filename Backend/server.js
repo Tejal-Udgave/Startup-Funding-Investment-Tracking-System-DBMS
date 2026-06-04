@@ -153,7 +153,7 @@ db.connect((err) => {
   console.log("Checkpoint C");
 
   // Seed INDUSTRY table if empty///////////////////////
-  db.query("SELECT COUNT(*) AS cnt FROM INDUSTRY", (err, res) => {
+  db.query("SELECT COUNT(*) AS cnt FROM industry", (err, res) => {
     if (err)
       return console.warn("Could not check INDUSTRY table:", err.message);
     if (res[0].cnt === 0) {
@@ -233,7 +233,7 @@ db.connect((err) => {
 
         if (user.email) {
           db.query(
-            "UPDATE FOUNDER SET user_id = ? WHERE TRIM(LOWER(founder_email)) = TRIM(LOWER(?)) AND user_id IS NULL",
+            "UPDATE founder SET user_id = ? WHERE TRIM(LOWER(founder_email)) = TRIM(LOWER(?)) AND user_id IS NULL",
             [user.user_id, user.email],
             (updateErr) => {
               if (updateErr)
@@ -253,7 +253,7 @@ db.connect((err) => {
 
         if (user.role === "investor" && !user.investor_id) {
           db.query(
-            "UPDATE INVESTOR SET user_id = ? WHERE TRIM(LOWER(investor_name)) = TRIM(LOWER(?)) AND user_id IS NULL",
+            "UPDATE investor SET user_id = ? WHERE TRIM(LOWER(investor_name)) = TRIM(LOWER(?)) AND user_id IS NULL",
             [user.user_id, user.username],
             (linkErr) => {
               if (linkErr) {
@@ -262,7 +262,7 @@ db.connect((err) => {
               }
 
               db.query(
-                "SELECT investor_id FROM INVESTOR WHERE user_id = ? LIMIT 1",
+                "SELECT investor_id FROM investor WHERE user_id = ? LIMIT 1",
                 [user.user_id],
                 (invErr, invRes) => {
                   if (invErr) {
@@ -302,7 +302,7 @@ db.connect((err) => {
     const startup_id = generateId("S");
 
     db.query(
-      `INSERT INTO STARTUP VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO startup VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         startup_id,
         startup_name,
@@ -432,7 +432,7 @@ db.connect((err) => {
           FROM STARTUP_PROFILE sp
           WHERE sp.startup_id = s.startup_id
           LIMIT 1) AS monthly_revenue
-       FROM STARTUP s
+       FROM startup s
        WHERE s.startup_id = ?`,
       [startup_id],
       (err, result) => {
@@ -491,7 +491,7 @@ db.connect((err) => {
   app.get("/startups/:user_id", (req, res) => {
     db.query(
       `SELECT DISTINCT s.*
-     FROM STARTUP s
+     FROM startup s
      LEFT JOIN FOUNDER f ON s.startup_id = f.startup_id
      LEFT JOIN USERS u2 ON TRIM(LOWER(u2.email)) = TRIM(LOWER(f.founder_email))
      WHERE s.user_id = ? OR f.user_id = ? OR u2.user_id = ?`,
@@ -529,7 +529,7 @@ db.connect((err) => {
     }
 
     db.query(
-      "SELECT COALESCE(SUM(initial_equity), 0) AS existing_total FROM FOUNDER WHERE startup_id=?",
+      "SELECT COALESCE(SUM(initial_equity), 0) AS existing_total FROM founder WHERE startup_id=?",
       [startup_id],
       (err, existingRes) => {
         if (err) return res.status(500).send(err.sqlMessage);
@@ -570,7 +570,7 @@ db.connect((err) => {
                 //       },
                 //     );
                 db.query(
-                  "SELECT founded_year FROM STARTUP WHERE startup_id = ?",
+                  "SELECT founded_year FROM startup WHERE startup_id = ?",
                   [startup_id],
                   (yearErr, yearRes) => {
                     if (yearErr)
@@ -617,7 +617,7 @@ db.connect((err) => {
                       const founderEmail = f.email || null;
 
                       db.query(
-                        `INSERT INTO FOUNDER 
+                        `INSERT INTO founder 
                    (founder_id, founder_name, founder_email, founder_role, initial_equity, startup_id, user_id)
                    VALUES (?, ?, ?, ?, ?, ?, ?)`,
                         [
@@ -675,7 +675,7 @@ db.connect((err) => {
     const { founder_name, founder_email, founder_role } = req.body;
 
     db.query(
-      `UPDATE FOUNDER
+      `UPDATE founder
      SET founder_name = ?,
          founder_email = ?,
          founder_role = ?
@@ -693,7 +693,7 @@ db.connect((err) => {
     const uid = req.params.user_id;
     db.query(
       `SELECT DISTINCT f.*, s.startup_name, COALESCE(u.email, f.founder_email) AS founder_email
-     FROM FOUNDER f
+     FROM founder f
      JOIN STARTUP s ON f.startup_id = s.startup_id
      LEFT JOIN USERS u ON f.user_id = u.user_id
      LEFT JOIN USERS u2 ON TRIM(LOWER(u2.email)) = TRIM(LOWER(f.founder_email))
@@ -701,7 +701,7 @@ db.connect((err) => {
        OR f.user_id = ?
        OR u2.user_id = ?
        OR f.startup_id IN (
-            SELECT f2.startup_id FROM FOUNDER f2
+            SELECT f2.startup_id FROM founder f2
             LEFT JOIN USERS u3 ON TRIM(LOWER(u3.email)) = TRIM(LOWER(f2.founder_email))
             WHERE f2.user_id = ? OR u3.user_id = ?
           )`,
@@ -798,7 +798,7 @@ db.connect((err) => {
   app.get("/investors", (req, res) => {
     db.query(
       `SELECT investor_id, investor_name, firm_name, investor_type, country
-     FROM INVESTOR
+     FROM investor
      ORDER BY investor_name`,
       (err, result) => {
         if (err) return res.status(500).send(err.sqlMessage);
@@ -811,7 +811,7 @@ db.connect((err) => {
     const { name, firm, type, country } = req.body;
 
     db.query(
-      `INSERT INTO INVESTOR
+      `INSERT INTO investor
      (investor_id, investor_name, firm_name, investor_type, country)
      VALUES (?, ?, ?, ?, ?)`,
       [generateId("I"), name, firm, type, country],
@@ -863,7 +863,7 @@ db.connect((err) => {
 
     // Get or create investor
     db.query(
-      "SELECT investor_id FROM INVESTOR WHERE user_id=? OR investor_id=?",
+      "SELECT investor_id FROM investor WHERE user_id=? OR investor_id=?",
       [user_id, providedInvestorId || null],
       (err, invRes) => {
         if (err) return res.status(500).send(err.sqlMessage);
@@ -874,7 +874,7 @@ db.connect((err) => {
           investor_id = generateId("I");
 
           db.query(
-            `INSERT INTO INVESTOR 
+            `INSERT INTO investor 
            (investor_id, investor_name, firm_name, country, user_id)
            VALUES (?, ?, ?, ?, ?)`,
             [
@@ -1065,9 +1065,9 @@ db.connect((err) => {
       inv.investor_type,
       inv.firm_name,
       inv.country AS investor_country,
-      (SELECT industry_name FROM INDUSTRY WHERE industry_id = s.industry_id LIMIT 1) AS industry_name,
+      (SELECT industry_name FROM industry WHERE industry_id = s.industry_id LIMIT 1) AS industry_name,
       (SELECT GROUP_CONCAT(f.founder_name SEPARATOR ', ')
- FROM FOUNDER f
+ FROM founder f
  WHERE f.startup_id = s.startup_id) AS founder_name
      FROM INVESTMENT i
      JOIN FUNDING_ROUND fr ON i.round_id = fr.round_id
@@ -1394,14 +1394,14 @@ db.connect((err) => {
   app.get("/history/:startup_id", (req, res) => {
     const startup_id = req.params.startup_id;
 
-    // Build history from FOUNDER and INVESTMENT with proper dilution calculation
+    // Build history FROM founder and INVESTMENT with proper dilution calculation
     db.query(
       `SELECT 
       f.founder_id,
       f.founder_name,
       f.founder_role,
       f.initial_equity
-     FROM FOUNDER f
+     FROM founder f
      WHERE f.startup_id = ?`,
       [startup_id],
       (founderErr, founders) => {
@@ -1545,7 +1545,7 @@ db.connect((err) => {
   // ================= GET INVESTOR =================
   app.get("/getInvestor/:user_id", (req, res) => {
     db.query(
-      "SELECT investor_id FROM INVESTOR WHERE user_id=?",
+      "SELECT investor_id FROM investor WHERE user_id=?",
       [req.params.user_id],
       (err, result) => {
         if (err) return res.status(500).send(err.sqlMessage);
@@ -1600,7 +1600,7 @@ db.connect((err) => {
 
   // ================= ALL STARTUPS =================
   app.get("/allStartups", (req, res) => {
-    db.query("SELECT * FROM STARTUP", (err, result) => {
+    db.query("SELECT * FROM startup", (err, result) => {
       if (err) return res.status(500).send(err.sqlMessage);
       res.json(result);
     });
@@ -1667,7 +1667,7 @@ db.connect((err) => {
     ) latest
   ) AS founder_equity
 
-    FROM STARTUP s
+    FROM startup s
     WHERE s.startup_id = ?;`,
       [startup_id],
       (err, result) => {
