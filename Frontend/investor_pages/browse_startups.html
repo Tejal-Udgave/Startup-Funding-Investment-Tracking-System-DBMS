@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Browse Startups - SFITS</title>
-    <meta name="description" content="Discover active funding opportunities. Browse startups with live valuation, funding stage, and round details." />
+    <meta
+      name="description"
+      content="Discover active funding opportunities. Browse startups with live valuation, funding stage, and round details."
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../styles.css" />
     <script src="../theme.js"></script>
@@ -24,28 +27,42 @@
       }
       .startup-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 12px 36px rgba(99,102,241,0.14);
-        border-color: rgba(99,102,241,0.3);
+        box-shadow: 0 12px 36px rgba(99, 102, 241, 0.14);
+        border-color: rgba(99, 102, 241, 0.3);
       }
       .startup-card .top-bar {
         position: absolute;
-        top: 0; left: 0; right: 0;
+        top: 0;
+        left: 0;
+        right: 0;
         height: 3px;
       }
       .card-icon {
-        width: 44px; height: 44px; border-radius: 13px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1.2rem; flex-shrink: 0;
-        background: rgba(99,102,241,0.1); color: #6366f1;
+        width: 44px;
+        height: 44px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        background: rgba(99, 102, 241, 0.1);
+        color: #6366f1;
         margin-bottom: 0.85rem;
       }
       .card-name {
-        font-size: 1.05rem; font-weight: 800;
-        color: var(--text-primary); margin-bottom: 0.25rem;
-        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .card-location {
-        font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.9rem;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-bottom: 0.9rem;
       }
 
       /* Stats row */
@@ -56,7 +73,7 @@
         margin-bottom: 0.9rem;
       }
       .card-stat {
-        background: var(--bg-surface, rgba(0,0,0,0.03));
+        background: var(--bg-surface, rgba(0, 0, 0, 0.03));
         border: 1px solid var(--border-glass);
         border-radius: 11px;
         padding: 0.55rem 0.7rem;
@@ -80,33 +97,46 @@
         margin-bottom: 0.9rem;
       }
       .card-progress__meta {
-        display: flex; justify-content: space-between;
-        font-size: 0.68rem; color: var(--text-muted);
-        font-weight: 600; margin-bottom: 0.25rem;
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.68rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        margin-bottom: 0.25rem;
       }
       .card-progress__track {
-        height: 6px; border-radius: 99px;
-        background: var(--border-glass); overflow: hidden;
+        height: 6px;
+        border-radius: 99px;
+        background: var(--border-glass);
+        overflow: hidden;
       }
       .card-progress__fill {
-        height: 100%; border-radius: 99px;
+        height: 100%;
+        border-radius: 99px;
         background: var(--gradient-green);
-        transition: width 0.8s cubic-bezier(.4,0,.2,1);
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .card-footer {
-        display: flex; align-items: center; justify-content: space-between;
-        margin-top: auto; padding-top: 0.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: auto;
+        padding-top: 0.7rem;
         border-top: 1px solid var(--border-glass);
       }
 
       /* Search & filter bar */
       .filter-bar {
-        display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        flex-wrap: wrap;
         margin-bottom: 1.2rem;
       }
       .filter-bar input {
-        flex: 1; min-width: 200px;
+        flex: 1;
+        min-width: 200px;
         border-radius: 12px;
         padding: 0.6rem 1rem;
         font-size: 0.85rem;
@@ -115,14 +145,18 @@
         color: var(--text-primary);
         outline: none;
       }
-      .filter-bar input:focus { border-color: #6366f1; }
+      .filter-bar input:focus {
+        border-color: #6366f1;
+      }
       .filter-bar select {
-        border-radius: 12px; padding: 0.6rem 1rem;
+        border-radius: 12px;
+        padding: 0.6rem 1rem;
         font-size: 0.82rem;
         background: var(--bg-card);
         border: 1px solid var(--border-glass);
         color: var(--text-primary);
-        outline: none; cursor: pointer;
+        outline: none;
+        cursor: pointer;
       }
     </style>
   </head>
@@ -133,37 +167,83 @@
       <nav class="sidebar investor">
         <div class="sidebar-brand">
           <div class="sidebar-title">SFITS</div>
-          <div class="sidebar-subtitle"><i class="ri-sparkling-2-line"></i> Workspace</div>
+          <div class="sidebar-subtitle">
+            <i class="ri-sparkling-2-line"></i> Workspace
+          </div>
           <div class="sidebar-role-chip">
             <i class="ri-line-chart-line"></i>
             <span>Investor Panel</span>
           </div>
-          <p class="sidebar-role-note">Track portfolio performance, browse opportunities, and invest with more clarity.</p>
+          <p class="sidebar-role-note">
+            Track portfolio performance, browse opportunities, and invest with
+            more clarity.
+          </p>
         </div>
         <ul class="sidebar-nav">
-          <li><a href="../investor_dashboard.html"><span class="nav-icon"><i class="ri-dashboard-line"></i></span> Dashboard</a></li>
-          <li><a href="browse_startups.html" class="active"><span class="nav-icon"><i class="ri-search-line"></i></span> Browse Startups</a></li>
-          <li><a href="invest.html"><span class="nav-icon"><i class="ri-coins-line"></i></span> Invest</a></li>
-          <li><a href="my_investments.html"><span class="nav-icon"><i class="ri-bar-chart-box-line"></i></span> My Investments</a></li>
+          <li>
+            <a href="../investor_dashboard.html"
+              ><span class="nav-icon"><i class="ri-dashboard-line"></i></span>
+              Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="browse_startups.html" class="active"
+              ><span class="nav-icon"><i class="ri-search-line"></i></span>
+              Browse Startups</a
+            >
+          </li>
+          <li>
+            <a href="invest.html"
+              ><span class="nav-icon"><i class="ri-coins-line"></i></span>
+              Invest</a
+            >
+          </li>
+          <li>
+            <a href="my_investments.html"
+              ><span class="nav-icon"
+                ><i class="ri-bar-chart-box-line"></i
+              ></span>
+              My Investments</a
+            >
+          </li>
         </ul>
-        <div class="sidebar-bottom"><a href="../welcome.html" onclick="localStorage.clear()"><i class="ri-logout-box-r-line"></i> Logout</a></div>
+        <div class="sidebar-bottom">
+          <a href="../welcome.html" onclick="localStorage.clear()"
+            ><i class="ri-logout-box-r-line"></i> Logout</a
+          >
+        </div>
       </nav>
 
       <div class="main-content">
         <div class="workspace-header-card animate-fade-in-down">
           <div>
-            <div class="role-badge investor mb-2"><i class="ri-line-chart-line"></i> Investor Panel</div>
-            <h1 class="text-2xl font-extrabold tracking-tight" style="color:var(--text-primary);">Browse Startups</h1>
-            <p class="text-sm mt-1" style="color:var(--text-muted);">Discover startups with live funding rounds — tap a card to invest</p>
+            <div class="role-badge investor mb-2">
+              <i class="ri-line-chart-line"></i> Investor Panel
+            </div>
+            <h1
+              class="text-2xl font-extrabold tracking-tight"
+              style="color: var(--text-primary)"
+            >
+              Browse Startups
+            </h1>
+            <p class="text-sm mt-1" style="color: var(--text-muted)">
+              Discover startups with live funding rounds — tap a card to invest
+            </p>
           </div>
           <div class="info-chip">
-            <i class="ri-building-4-line"></i> <span id="countDisplay">0</span> Startups
+            <i class="ri-building-4-line"></i>
+            <span id="countDisplay">0</span> Startups
           </div>
         </div>
 
         <!-- Filter bar -->
         <div class="filter-bar animate-fade-in-up delay-1">
-          <input id="searchInput" type="text" placeholder="🔍  Search by name or location…" oninput="filterCards()" />
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="🔍  Search by name or location…"
+            oninput="filterCards()"
+          />
           <select id="stageFilter" onchange="filterCards()">
             <option value="">All Stages</option>
             <option>Pre-Seed</option>
@@ -174,7 +254,10 @@
           </select>
         </div>
 
-        <div id="startupList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+        <div
+          id="startupList"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+        ></div>
       </div>
     </div>
 
@@ -185,29 +268,35 @@
       async function ensureInvestor() {
         let investor_id = localStorage.getItem("investor_id");
         if (!investor_id && user_id) {
-          const res  = await fetch(`http://localhost:5000/getInvestor/${user_id}`);
+          const res = await fetch(
+            `http://localhost:5000/getInvestor/${user_id}`,
+          );
           const data = await res.json();
-          if (data.investor_id) localStorage.setItem("investor_id", data.investor_id);
+          if (data.investor_id)
+            localStorage.setItem("investor_id", data.investor_id);
         }
       }
 
       const stageGradients = {
-        'Pre-Seed':  'linear-gradient(135deg,#f59e0b,#fbbf24)',
-        'Seed':      'linear-gradient(135deg,#10b981,#34d399)',
-        'Series A':  'linear-gradient(135deg,#6366f1,#818cf8)',
-        'Series B':  'linear-gradient(135deg,#8b5cf6,#a78bfa)',
-        'Series C':  'linear-gradient(135deg,#0d9488,#2dd4bf)',
+        "Pre-Seed": "linear-gradient(135deg,#f59e0b,#fbbf24)",
+        Seed: "linear-gradient(135deg,#10b981,#34d399)",
+        "Series A": "linear-gradient(135deg,#6366f1,#818cf8)",
+        "Series B": "linear-gradient(135deg,#8b5cf6,#a78bfa)",
+        "Series C": "linear-gradient(135deg,#0d9488,#2dd4bf)",
       };
       const stageBadge = {
-        'Pre-Seed': 'badge-orange', 'Seed': 'badge-green',
-        'Series A': 'badge-blue',   'Series B': 'badge-purple', 'Series C': 'badge-teal'
+        "Pre-Seed": "badge-orange",
+        Seed: "badge-green",
+        "Series A": "badge-blue",
+        "Series B": "badge-purple",
+        "Series C": "badge-teal",
       };
 
       function fmtMoney(n) {
         const num = Number(n);
         if (!num || isNaN(num)) return "—";
-        if (num >= 1e7)  return "₹" + (num / 1e7).toFixed(2) + " Cr";
-        if (num >= 1e5)  return "₹" + (num / 1e5).toFixed(2) + " L";
+        if (num >= 1e7) return "₹" + (num / 1e7).toFixed(2) + " Cr";
+        if (num >= 1e5) return "₹" + (num / 1e5).toFixed(2) + " L";
         return "₹" + num.toLocaleString("en-IN");
       }
 
@@ -225,14 +314,22 @@
 
           // Map startup_id → round info
           const roundMap = {};
-          rounds.forEach(r => { roundMap[r.startup_id] = r; });
+          rounds.forEach((r) => {
+            roundMap[r.startup_id] = r;
+          });
 
           // Merge
-          allStartups = allStartups.map(s => ({ ...s, _round: roundMap[s.startup_id] || null }));
+          allStartups = allStartups.map((s) => ({
+            ...s,
+            _round: roundMap[s.startup_id] || null,
+          }));
 
-          document.getElementById("countDisplay").textContent = allStartups.length;
+          document.getElementById("countDisplay").textContent =
+            allStartups.length;
           renderCards(allStartups);
-        } catch (err) { console.error("Error:", err); }
+        } catch (err) {
+          console.error("Error:", err);
+        }
       }
 
       function renderCards(list) {
@@ -245,38 +342,43 @@
         }
 
         list.forEach((s, i) => {
-          const r    = s._round;
-          const grad = stageGradients[s.stage] || stageGradients['Seed'];
-          const badge = stageBadge[s.stage] || 'badge-blue';
-          const pct   = r && r.target_funding > 0 ? Math.min(100, (r.amount_raised / r.target_funding) * 100) : 0;
+          const r = s._round;
+          const grad = stageGradients[s.stage] || stageGradients["Seed"];
+          const badge = stageBadge[s.stage] || "badge-blue";
+          const pct =
+            r && r.target_funding > 0
+              ? Math.min(100, (r.amount_raised / r.target_funding) * 100)
+              : 0;
 
           container.innerHTML += `
           <div class="startup-card animate-fade-in-up" style="animation-delay:${0.07 * i}s;opacity:0;">
             <div class="top-bar" style="background:${grad};"></div>
             <div class="card-icon"><i class="ri-building-4-line"></i></div>
             <div class="card-name">${s.startup_name}</div>
-            <div class="card-location"><i class="ri-map-pin-line"></i> ${[s.city, s.country].filter(Boolean).join(', ') || 'N/A'} &nbsp;·&nbsp; Est. ${s.founded_year || 'N/A'}</div>
+            <div class="card-location"><i class="ri-map-pin-line"></i> ${[s.city, s.country].filter(Boolean).join(", ") || "N/A"} &nbsp;·&nbsp; Est. ${s.founded_year || "N/A"}</div>
 
             <div class="card-stats">
               <div class="card-stat">
                 <div class="card-stat__label"><i class="ri-stock-line"></i> Valuation</div>
-                <div class="card-stat__value">${r ? fmtMoney(r.valuation) : '—'}</div>
+                <div class="card-stat__value">${r ? fmtMoney(r.valuation) : "—"}</div>
               </div>
               <div class="card-stat">
                 <div class="card-stat__label"><i class="ri-target-line"></i> Funding Goal</div>
-                <div class="card-stat__value">${r && r.target_funding > 0 ? fmtMoney(r.target_funding) : '—'}</div>
+                <div class="card-stat__value">${r && r.target_funding > 0 ? fmtMoney(r.target_funding) : "—"}</div>
               </div>
               <div class="card-stat">
                 <div class="card-stat__label"><i class="ri-money-rupee-circle-line"></i> Raised</div>
-                <div class="card-stat__value">${r ? fmtMoney(r.amount_raised) : '—'}</div>
+                <div class="card-stat__value">${r ? fmtMoney(r.amount_raised) : "—"}</div>
               </div>
               <div class="card-stat">
                 <div class="card-stat__label"><i class="ri-group-line"></i> Investors</div>
-                <div class="card-stat__value">${r ? r.investor_count : '—'}</div>
+                <div class="card-stat__value">${r ? r.investor_count : "—"}</div>
               </div>
             </div>
 
-            ${r && r.target_funding > 0 ? `
+            ${
+              r && r.target_funding > 0
+                ? `
             <div class="card-progress">
               <div class="card-progress__meta">
                 <span>Funding Progress</span>
@@ -285,27 +387,39 @@
               <div class="card-progress__track">
                 <div class="card-progress__fill" style="width:${pct.toFixed(1)}%;"></div>
               </div>
-            </div>` : ''}
+            </div>`
+                : ""
+            }
 
-            <div class="card-footer">
-              <span class="badge ${badge}">${s.stage}</span>
-              ${r ? `<span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;"><i class="ri-trophy-line"></i> ${r.round_type}</span>` : ''}
-              <a href="invest.html" class="btn btn-gradient btn-sm" style="text-decoration:none;"
-                 onclick="selectStartupForInvestment('${s.startup_id}', '${String(s.startup_name).replace(/'/g, "\\'")}')">
-                 <i class="ri-coins-line"></i> Invest
-              </a>
+            <div class="card-footer" style="display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center;justify-content:space-between;">
+              <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+                <span class="badge ${badge}">${s.stage}</span>
+                ${r ? `<span style="font-size:0.72rem;color:var(--text-muted);font-weight:600;"><i class="ri-trophy-line"></i> ${r.round_type}</span>` : ""}
+              </div>
+              <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <a href="startup_details.html?startup_id=${s.startup_id}" class="btn btn-gradient btn-sm" style="text-decoration:none;"
+                   onclick="selectStartupForDetails('${s.startup_id}', '${String(s.startup_name).replace(/'/g, "\\'")}')">
+                   <i class="ri-eye-line"></i> Details
+                </a>
+                <a href="invest.html" class="btn btn-gradient btn-sm" style="text-decoration:none;"
+                   onclick="selectStartupForInvestment('${s.startup_id}', '${String(s.startup_name).replace(/'/g, "\\'")}')">
+                   <i class="ri-coins-line"></i> Invest
+                </a>
+              </div>
             </div>
           </div>`;
         });
       }
 
       function filterCards() {
-        const q     = document.getElementById("searchInput").value.toLowerCase();
+        const q = document.getElementById("searchInput").value.toLowerCase();
         const stage = document.getElementById("stageFilter").value;
-        const list  = allStartups.filter(s => {
-          const matchQ = !q || s.startup_name.toLowerCase().includes(q)
-                              || (s.city||'').toLowerCase().includes(q)
-                              || (s.country||'').toLowerCase().includes(q);
+        const list = allStartups.filter((s) => {
+          const matchQ =
+            !q ||
+            s.startup_name.toLowerCase().includes(q) ||
+            (s.city || "").toLowerCase().includes(q) ||
+            (s.country || "").toLowerCase().includes(q);
           const matchS = !stage || s.stage === stage;
           return matchQ && matchS;
         });
@@ -318,26 +432,48 @@
         localStorage.setItem("selected_invest_startup_name", startupName);
       }
 
-      (async () => { await ensureInvestor(); await loadStartups(); })();
+      function selectStartupForDetails(startupId, startupName) {
+        localStorage.setItem("selected_details_startup_id", startupId);
+        localStorage.setItem("selected_details_startup_name", startupName);
+      }
+
+      (async () => {
+        await ensureInvestor();
+        await loadStartups();
+      })();
     </script>
-  <script>
-(function() {
-  var name = localStorage.getItem("username") || "User";
-  var role = localStorage.getItem("role") || "Member";
-  var initials = name.split(" ").map(function(w){return w[0]||"";}).join("").slice(0,2).toUpperCase();
-  var brand = document.querySelector(".sidebar-brand");
-  if (brand) {
-    var chip = document.createElement("div");
-    chip.className = "sidebar-user-chip";
-    chip.innerHTML = "<div class=\"sidebar-user-avatar\">" + initials + "</div><div class=\"sidebar-user-info\"><div class=\"sidebar-user-name\">" + name + "</div><div class=\"sidebar-user-role\">" + role + "</div></div>";
-    var title = brand.querySelector(".sidebar-title");
-    if (title && title.nextSibling) {
-      brand.insertBefore(chip, title.nextSibling);
-    } else {
-      brand.appendChild(chip);
-    }
-  }
-})();
-</script>
-</body>
+    <script>
+      (function () {
+        var name = localStorage.getItem("username") || "User";
+        var role = localStorage.getItem("role") || "Member";
+        var initials = name
+          .split(" ")
+          .map(function (w) {
+            return w[0] || "";
+          })
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        var brand = document.querySelector(".sidebar-brand");
+        if (brand) {
+          var chip = document.createElement("div");
+          chip.className = "sidebar-user-chip";
+          chip.innerHTML =
+            '<div class="sidebar-user-avatar">' +
+            initials +
+            '</div><div class="sidebar-user-info"><div class="sidebar-user-name">' +
+            name +
+            '</div><div class="sidebar-user-role">' +
+            role +
+            "</div></div>";
+          var title = brand.querySelector(".sidebar-title");
+          if (title && title.nextSibling) {
+            brand.insertBefore(chip, title.nextSibling);
+          } else {
+            brand.appendChild(chip);
+          }
+        }
+      })();
+    </script>
+  </body>
 </html>

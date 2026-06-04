@@ -4,10 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Invest - SFITS</title>
-    <meta name="description" content="Make informed investment decisions. View live funding rounds, valuation, and funding goals before investing." />
+    <meta
+      name="description"
+      content="Make informed investment decisions. View live funding rounds, valuation, and funding goals before investing."
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../styles.css" />
     <script src="../theme.js"></script>
+    <script src="../toast.js"></script>
     <style>
       /* ── Round context panel ── */
       .round-context-panel {
@@ -36,7 +40,7 @@
         gap: 0.2rem;
         padding: 0.85rem 1rem;
         border-radius: 14px;
-        background: var(--bg-surface, rgba(0,0,0,0.03));
+        background: var(--bg-surface, rgba(0, 0, 0, 0.03));
         border: 1px solid var(--border-glass);
         margin-bottom: 0.6rem;
       }
@@ -59,15 +63,42 @@
       }
 
       /* ── Progress bar ── */
-      .progress-wrap { margin-bottom: 0.6rem; }
-      .progress-meta { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.3rem; font-weight: 600; }
-      .progress-track { height: 8px; border-radius: 99px; background: var(--border-glass); overflow: hidden; }
-      .progress-fill  { height: 100%; border-radius: 99px; background: var(--gradient-green); transition: width 0.8s cubic-bezier(.4,0,.2,1); }
-
+      .progress-wrap {
+        margin-bottom: 0.6rem;
+      }
+      .progress-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-bottom: 0.3rem;
+        font-weight: 600;
+      }
+      .progress-track {
+        height: 8px;
+        border-radius: 99px;
+        background: var(--border-glass);
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        border-radius: 99px;
+        background: var(--gradient-green);
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
 
       /* ── Placeholder ── */
-      #contextPlaceholder { text-align:center; padding: 2rem 1rem; color: var(--text-muted); }
-      #contextPlaceholder i { font-size: 2rem; opacity: 0.3; display: block; margin-bottom: 0.5rem; }
+      #contextPlaceholder {
+        text-align: center;
+        padding: 2rem 1rem;
+        color: var(--text-muted);
+      }
+      #contextPlaceholder i {
+        font-size: 2rem;
+        opacity: 0.3;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
     </style>
   </head>
   <body>
@@ -77,41 +108,104 @@
       <nav class="sidebar investor">
         <div class="sidebar-brand">
           <div class="sidebar-title">SFITS</div>
-          <div class="sidebar-subtitle"><i class="ri-sparkling-2-line"></i> Workspace</div>
+          <div class="sidebar-subtitle">
+            <i class="ri-sparkling-2-line"></i> Workspace
+          </div>
           <div class="sidebar-role-chip">
             <i class="ri-line-chart-line"></i>
             <span>Investor Panel</span>
           </div>
-          <p class="sidebar-role-note">Track portfolio performance, browse opportunities, and invest with more clarity.</p>
+          <p class="sidebar-role-note">
+            Track portfolio performance, browse opportunities, and invest with
+            more clarity.
+          </p>
         </div>
         <ul class="sidebar-nav">
-          <li><a href="../investor_dashboard.html"><span class="nav-icon"><i class="ri-dashboard-line"></i></span> Dashboard</a></li>
-          <li><a href="browse_startups.html"><span class="nav-icon"><i class="ri-search-line"></i></span> Browse Startups</a></li>
-          <li><a href="invest.html" class="active"><span class="nav-icon"><i class="ri-coins-line"></i></span> Invest</a></li>
-          <li><a href="my_investments.html"><span class="nav-icon"><i class="ri-bar-chart-box-line"></i></span> My Investments</a></li>
+          <li>
+            <a href="../investor_dashboard.html"
+              ><span class="nav-icon"><i class="ri-dashboard-line"></i></span>
+              Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="browse_startups.html"
+              ><span class="nav-icon"><i class="ri-search-line"></i></span>
+              Browse Startups</a
+            >
+          </li>
+          <li>
+            <a href="invest.html" class="active"
+              ><span class="nav-icon"><i class="ri-coins-line"></i></span>
+              Invest</a
+            >
+          </li>
+          <li>
+            <a href="my_investments.html"
+              ><span class="nav-icon"
+                ><i class="ri-bar-chart-box-line"></i
+              ></span>
+              My Investments</a
+            >
+          </li>
         </ul>
-        <div class="sidebar-bottom"><a href="../welcome.html" onclick="localStorage.clear()"><i class="ri-logout-box-r-line"></i> Logout</a></div>
+        <div class="sidebar-bottom">
+          <a href="../welcome.html" onclick="localStorage.clear()"
+            ><i class="ri-logout-box-r-line"></i> Logout</a
+          >
+        </div>
       </nav>
 
       <div class="main-content">
         <!-- Page header -->
         <div class="workspace-header-card animate-fade-in-down">
           <div>
-            <div class="role-badge investor mb-2"><i class="ri-line-chart-line"></i> Investor Panel</div>
-            <h1 class="text-2xl font-extrabold tracking-tight" style="color:var(--text-primary);">
-              Invest in <span style="background:var(--gradient-green);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Startups</span>
+            <div class="role-badge investor mb-2">
+              <i class="ri-line-chart-line"></i> Investor Panel
+            </div>
+            <h1
+              class="text-2xl font-extrabold tracking-tight"
+              style="color: var(--text-primary)"
+            >
+              Invest in
+              <span
+                style="
+                  background: var(--gradient-green);
+                  -webkit-background-clip: text;
+                  -webkit-text-fill-color: transparent;
+                "
+                >Startups</span
+              >
             </h1>
-            <p class="text-sm mt-1" style="color:var(--text-muted);">Select a live funding round and review all context before committing capital</p>
+            <p class="text-sm mt-1" style="color: var(--text-muted)">
+              Select a live funding round and review all context before
+              committing capital
+            </p>
           </div>
         </div>
 
         <!-- Two-column: Form + Context -->
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 animate-fade-in-up delay-1">
+        <div
+          class="grid grid-cols-1 lg:grid-cols-5 gap-6 animate-fade-in-up delay-1"
+        >
           <!-- Investment Form -->
-          <div class="lg:col-span-3 form-section" style="margin:0;">
-            <h2 class="section-title"><i class="ri-focus-3-line"></i> Make an Investment</h2>
+          <div class="lg:col-span-3 form-section" style="margin: 0">
+            <h2 class="section-title">
+              <i class="ri-focus-3-line"></i> Make an Investment
+            </h2>
 
-            <div id="selectedStartupBanner" class="mb-4" style="display:none;padding:0.9rem 1rem;border-radius:16px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.14);color:var(--accent-indigo);font-weight:600;"></div>
+            <div
+              id="selectedStartupBanner"
+              class="mb-4"
+              style="
+                display: none;
+                padding: 0.9rem 1rem;
+                border-radius: 16px;
+                background: rgba(99, 102, 241, 0.08);
+                border: 1px solid rgba(99, 102, 241, 0.14);
+                color: var(--accent-indigo);
+                font-weight: 600;
+              "
+            ></div>
 
             <form id="investForm" class="form-grid cols-1">
               <div>
@@ -120,86 +214,188 @@
               </div>
               <div>
                 <label for="firm_name">Firm Name</label>
-                <input id="firm_name" type="text" placeholder="e.g. Self / VC Firm" required />
+                <input
+                  id="firm_name"
+                  type="text"
+                  placeholder="e.g. Self / VC Firm"
+                  required
+                />
               </div>
               <div>
                 <label for="country">Country</label>
-                <input id="country" type="text" placeholder="Country" required />
+                <input
+                  id="country"
+                  type="text"
+                  placeholder="Country"
+                  required
+                />
               </div>
               <div>
                 <label for="amount">Investment Amount (₹)</label>
-                <input id="amount" type="number" min="1" placeholder="e.g. 5000000" required oninput="recalcEquitySuggestion()" />
+                <input
+                  id="amount"
+                  type="number"
+                  min="1"
+                  placeholder="e.g. 5000000"
+                  required
+                  oninput="recalcEquitySuggestion()"
+                />
               </div>
               <div>
                 <label for="equity">Equity % Requested</label>
-                <input id="equity" type="number" step="0.01" min="0.01" max="100" placeholder="e.g. 5" required />
+                <input
+                  id="equity"
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  max="100"
+                  placeholder="e.g. 5"
+                  required
+                />
               </div>
               <!-- Equity hint -->
-              <div id="equityHint" style="display:none;font-size:0.78rem;color:var(--text-muted);padding:0.5rem 0.75rem;border-radius:10px;background:var(--bg-surface,rgba(0,0,0,0.04));border:1px solid var(--border-glass);">
-                <i class="ri-lightbulb-line"></i> <span id="equityHintText"></span>
+              <div
+                id="equityHint"
+                style="
+                  display: none;
+                  font-size: 0.78rem;
+                  color: var(--text-muted);
+                  padding: 0.5rem 0.75rem;
+                  border-radius: 10px;
+                  background: var(--bg-surface, rgba(0, 0, 0, 0.04));
+                  border: 1px solid var(--border-glass);
+                "
+              >
+                <i class="ri-lightbulb-line"></i>
+                <span id="equityHintText"></span>
               </div>
-              <button id="submitBtn" class="btn btn-gradient btn-full" type="submit">
+              <button
+                id="submitBtn"
+                class="btn btn-gradient btn-full"
+                type="submit"
+              >
                 <i class="ri-send-plane-line"></i> Invest Now →
               </button>
+              <div id="receiptControls" style="display: none; margin-top: 1rem">
+                <button
+                  id="downloadCertificateBtn"
+                  type="button"
+                  class="btn btn-secondary btn-full"
+                >
+                  <i class="ri-download-cloud-2-line"></i> Download Investment
+                  Certificate
+                </button>
+              </div>
             </form>
           </div>
 
           <!-- Round Context Panel -->
           <div class="lg:col-span-2">
             <div class="round-context-panel">
-              <div class="panel-title"><i class="ri-information-line"></i> Round Details</div>
+              <div class="panel-title">
+                <i class="ri-information-line"></i> Round Details
+              </div>
               <div id="contextPlaceholder">
                 <i class="ri-bar-chart-grouped-line"></i>
-                <p style="font-size:0.82rem;">Select a funding round to see detailed information</p>
+                <p style="font-size: 0.82rem">
+                  Select a funding round to see detailed information
+                </p>
               </div>
-              <div id="contextContent" style="display:none;">
+              <div id="contextContent" style="display: none">
                 <!-- Startup info -->
-                <div style="margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border-glass);">
-                  <div style="font-size:1.05rem;font-weight:800;color:var(--text-primary);margin-bottom:0.2rem;" id="ctx-startup-name">—</div>
-                  <div style="font-size:0.75rem;color:var(--text-muted);" id="ctx-location"><i class="ri-map-pin-line"></i> —</div>
+                <div
+                  style="
+                    margin-bottom: 1rem;
+                    padding-bottom: 1rem;
+                    border-bottom: 1px solid var(--border-glass);
+                  "
+                >
+                  <div
+                    style="
+                      font-size: 1.05rem;
+                      font-weight: 800;
+                      color: var(--text-primary);
+                      margin-bottom: 0.2rem;
+                    "
+                    id="ctx-startup-name"
+                  >
+                    —
+                  </div>
+                  <div
+                    style="font-size: 0.75rem; color: var(--text-muted)"
+                    id="ctx-location"
+                  >
+                    <i class="ri-map-pin-line"></i> —
+                  </div>
                 </div>
 
                 <div class="context-stat">
-                  <span class="context-stat__label"><i class="ri-trophy-line"></i> Round Type</span>
+                  <span class="context-stat__label"
+                    ><i class="ri-trophy-line"></i> Round Type</span
+                  >
                   <span class="context-stat__value" id="ctx-round-type">—</span>
                   <span class="context-stat__sub" id="ctx-round-date"></span>
                 </div>
 
                 <div class="context-stat">
-                  <span class="context-stat__label"><i class="ri-stock-line"></i> Valuation</span>
+                  <span class="context-stat__label"
+                    ><i class="ri-stock-line"></i> Valuation</span
+                  >
                   <span class="context-stat__value" id="ctx-valuation">—</span>
                   <span class="context-stat__sub">Post-money estimate</span>
                 </div>
 
                 <div class="context-stat">
-                  <span class="context-stat__label"><i class="ri-target-line"></i> Funding Goal</span>
+                  <span class="context-stat__label"
+                    ><i class="ri-target-line"></i> Funding Goal</span
+                  >
                   <span class="context-stat__value" id="ctx-target">—</span>
                   <span class="context-stat__sub" id="ctx-raised-sub"></span>
                 </div>
 
                 <!-- Funding progress -->
-                <div class="progress-wrap" id="ctx-progress-wrap" style="display:none;">
+                <div
+                  class="progress-wrap"
+                  id="ctx-progress-wrap"
+                  style="display: none"
+                >
                   <div class="progress-meta">
                     <span>Raised</span>
                     <span id="ctx-progress-pct">0%</span>
                   </div>
                   <div class="progress-track">
-                    <div class="progress-fill" id="ctx-progress-fill" style="width:0%"></div>
+                    <div
+                      class="progress-fill"
+                      id="ctx-progress-fill"
+                      style="width: 0%"
+                    ></div>
                   </div>
-                  <div style="display:flex;justify-content:space-between;font-size:0.68rem;color:var(--text-muted);margin-top:0.25rem;">
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      font-size: 0.68rem;
+                      color: var(--text-muted);
+                      margin-top: 0.25rem;
+                    "
+                  >
                     <span id="ctx-raised-label">₹0 raised</span>
                     <span id="ctx-target-label">Goal: ₹0</span>
                   </div>
                 </div>
 
                 <div class="context-stat">
-                  <span class="context-stat__label"><i class="ri-group-line"></i> Current Investors</span>
+                  <span class="context-stat__label"
+                    ><i class="ri-group-line"></i> Current Investors</span
+                  >
                   <span class="context-stat__value" id="ctx-investors">—</span>
-                  <span class="context-stat__sub">Have committed to this round</span>
+                  <span class="context-stat__sub"
+                    >Have committed to this round</span
+                  >
                 </div>
 
                 <!-- Stage badge -->
-                <div style="margin-top:0.6rem;">
+                <div style="margin-top: 0.6rem">
                   <span class="badge badge-blue" id="ctx-stage">—</span>
                 </div>
               </div>
@@ -210,8 +406,8 @@
     </div>
 
     <script>
-      const user_id   = localStorage.getItem("user_id");
-      const username  = localStorage.getItem("username");
+      const user_id = localStorage.getItem("user_id");
+      const username = localStorage.getItem("username");
       if (!user_id) window.location.href = "../login.html";
 
       // ── All rounds data store ──
@@ -221,9 +417,12 @@
       async function ensureInvestor() {
         let investor_id = localStorage.getItem("investor_id");
         if (!investor_id && user_id) {
-          const res  = await fetch(`http://localhost:5000/getInvestor/${user_id}`);
+          const res = await fetch(
+            `http://localhost:5000/getInvestor/${user_id}`,
+          );
           const data = await res.json();
-          if (data.investor_id) localStorage.setItem("investor_id", data.investor_id);
+          if (data.investor_id)
+            localStorage.setItem("investor_id", data.investor_id);
         }
       }
 
@@ -231,32 +430,42 @@
       function fmtMoney(n) {
         const num = Number(n);
         if (!num || isNaN(num)) return "—";
-        if (num >= 1e7)  return "₹" + (num / 1e7).toFixed(2) + " Cr";
-        if (num >= 1e5)  return "₹" + (num / 1e5).toFixed(2) + " L";
+        if (num >= 1e7) return "₹" + (num / 1e7).toFixed(2) + " Cr";
+        if (num >= 1e5) return "₹" + (num / 1e5).toFixed(2) + " L";
         return "₹" + num.toLocaleString("en-IN");
       }
       function fmtDate(d) {
         if (!d) return "";
-        return new Date(d).toLocaleDateString("en-IN", { day:"2-digit", month:"short", year:"numeric" });
+        return new Date(d).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
       }
 
       // ── Load rounds ──
       async function loadRounds() {
-        const selectedStartupId   = localStorage.getItem("selected_invest_startup_id");
-        const selectedStartupName = localStorage.getItem("selected_invest_startup_name");
+        const selectedStartupId = localStorage.getItem(
+          "selected_invest_startup_id",
+        );
+        const selectedStartupName = localStorage.getItem(
+          "selected_invest_startup_name",
+        );
 
-        const res  = await fetch("http://localhost:5000/allRounds");
+        const res = await fetch("http://localhost:5000/allRounds");
         allRoundsData = await res.json();
 
         const dropdown = document.getElementById("round");
-        const banner   = document.getElementById("selectedStartupBanner");
+        const banner = document.getElementById("selectedStartupBanner");
         const filteredRounds = selectedStartupId
-          ? allRoundsData.filter(r => String(r.startup_id) === String(selectedStartupId))
+          ? allRoundsData.filter(
+              (r) => String(r.startup_id) === String(selectedStartupId),
+            )
           : allRoundsData;
 
         // Dropdown
         dropdown.innerHTML = `<option value="" disabled selected>Select a Funding Round</option>`;
-        filteredRounds.forEach(r => {
+        filteredRounds.forEach((r) => {
           dropdown.innerHTML += `<option value="${r.round_id}">${r.startup_name} — ${r.round_type}</option>`;
         });
 
@@ -277,40 +486,63 @@
 
       // ── Update context panel ──
       function updateContextPanel(roundId) {
-        const r = allRoundsData.find(x => String(x.round_id) === String(roundId));
+        const r = allRoundsData.find(
+          (x) => String(x.round_id) === String(roundId),
+        );
         const placeholder = document.getElementById("contextPlaceholder");
-        const content     = document.getElementById("contextContent");
+        const content = document.getElementById("contextContent");
 
-        if (!r) { placeholder.style.display = ''; content.style.display = 'none'; return; }
+        if (!r) {
+          placeholder.style.display = "";
+          content.style.display = "none";
+          return;
+        }
 
-        placeholder.style.display = 'none';
-        content.style.display     = '';
+        placeholder.style.display = "none";
+        content.style.display = "";
 
-        document.getElementById("ctx-startup-name").textContent = r.startup_name;
-        document.getElementById("ctx-location").innerHTML      = `<i class="ri-map-pin-line"></i> ${[r.city, r.country].filter(Boolean).join(', ') || 'N/A'}`;
-        document.getElementById("ctx-round-type").textContent  = r.round_type;
-        document.getElementById("ctx-round-date").textContent  = r.round_date ? `Round date: ${fmtDate(r.round_date)}` : '';
-        document.getElementById("ctx-valuation").textContent   = fmtMoney(r.valuation);
-        document.getElementById("ctx-target").textContent      = r.target_funding > 0 ? fmtMoney(r.target_funding) : 'Not specified';
-        document.getElementById("ctx-investors").textContent   = r.investor_count + (r.investor_count === 1 ? ' investor' : ' investors');
+        document.getElementById("ctx-startup-name").textContent =
+          r.startup_name;
+        document.getElementById("ctx-location").innerHTML =
+          `<i class="ri-map-pin-line"></i> ${[r.city, r.country].filter(Boolean).join(", ") || "N/A"}`;
+        document.getElementById("ctx-round-type").textContent = r.round_type;
+        document.getElementById("ctx-round-date").textContent = r.round_date
+          ? `Round date: ${fmtDate(r.round_date)}`
+          : "";
+        document.getElementById("ctx-valuation").textContent = fmtMoney(
+          r.valuation,
+        );
+        document.getElementById("ctx-target").textContent =
+          r.target_funding > 0 ? fmtMoney(r.target_funding) : "Not specified";
+        document.getElementById("ctx-investors").textContent =
+          r.investor_count +
+          (r.investor_count === 1 ? " investor" : " investors");
 
         // Stage badge
         const stageBadge = document.getElementById("ctx-stage");
-        stageBadge.textContent = r.stage || 'N/A';
+        stageBadge.textContent = r.stage || "N/A";
 
         // Funding progress
         const progressWrap = document.getElementById("ctx-progress-wrap");
         if (r.target_funding > 0) {
           const pct = Math.min(100, (r.amount_raised / r.target_funding) * 100);
-          document.getElementById("ctx-progress-fill").style.width  = pct.toFixed(1) + '%';
-          document.getElementById("ctx-progress-pct").textContent   = pct.toFixed(0) + '%';
-          document.getElementById("ctx-raised-label").textContent   = fmtMoney(r.amount_raised) + ' raised';
-          document.getElementById("ctx-target-label").textContent   = 'Goal: ' + fmtMoney(r.target_funding);
-          document.getElementById("ctx-raised-sub").textContent     = fmtMoney(r.amount_raised) + ' raised so far';
-          progressWrap.style.display = '';
+          document.getElementById("ctx-progress-fill").style.width =
+            pct.toFixed(1) + "%";
+          document.getElementById("ctx-progress-pct").textContent =
+            pct.toFixed(0) + "%";
+          document.getElementById("ctx-raised-label").textContent =
+            fmtMoney(r.amount_raised) + " raised";
+          document.getElementById("ctx-target-label").textContent =
+            "Goal: " + fmtMoney(r.target_funding);
+          document.getElementById("ctx-raised-sub").textContent =
+            fmtMoney(r.amount_raised) + " raised so far";
+          progressWrap.style.display = "";
         } else {
-          progressWrap.style.display = 'none';
-          document.getElementById("ctx-raised-sub").textContent = r.amount_raised > 0 ? fmtMoney(r.amount_raised) + ' raised so far' : 'No investments yet';
+          progressWrap.style.display = "none";
+          document.getElementById("ctx-raised-sub").textContent =
+            r.amount_raised > 0
+              ? fmtMoney(r.amount_raised) + " raised so far"
+              : "No investments yet";
         }
 
         // Equity suggestion
@@ -320,113 +552,150 @@
       // ── Equity hint based on valuation ──
       function recalcEquitySuggestion() {
         const roundId = document.getElementById("round").value;
-        const r       = allRoundsData.find(x => String(x.round_id) === String(roundId));
-        const amount  = Number(document.getElementById("amount").value);
-        const hint    = document.getElementById("equityHint");
+        const r = allRoundsData.find(
+          (x) => String(x.round_id) === String(roundId),
+        );
+        const amount = Number(document.getElementById("amount").value);
+        const hint = document.getElementById("equityHint");
         const hintTxt = document.getElementById("equityHintText");
 
         if (r && r.valuation > 0 && amount > 0) {
           const suggestedEquity = ((amount / r.valuation) * 100).toFixed(2);
-          hintTxt.textContent = `At a valuation of ${fmtMoney(r.valuation)}, ₹${amount.toLocaleString('en-IN')} ≈ ${suggestedEquity}% equity`;
-          hint.style.display = '';
+          hintTxt.textContent = `At a valuation of ${fmtMoney(r.valuation)}, ₹${amount.toLocaleString("en-IN")} ≈ ${suggestedEquity}% equity`;
+          hint.style.display = "";
         } else {
-          hint.style.display = 'none';
+          hint.style.display = "none";
         }
       }
 
       // ── Dropdown change listener ──
-      document.getElementById("round").addEventListener("change", function() {
+      document.getElementById("round").addEventListener("change", function () {
         updateContextPanel(this.value);
         // Sync card selection
-        document.querySelectorAll('.live-round-card').forEach(c => c.classList.remove('selected'));
+        document
+          .querySelectorAll(".live-round-card")
+          .forEach((c) => c.classList.remove("selected"));
         const card = document.getElementById(`lrc-${this.value}`);
-        if (card) card.classList.add('selected');
+        if (card) card.classList.add("selected");
       });
 
       // ── Amount change ──
-      document.getElementById("amount").addEventListener("input", recalcEquitySuggestion);
+      document
+        .getElementById("amount")
+        .addEventListener("input", recalcEquitySuggestion);
 
       // ── Form submit ──
       let isSubmitting = false;
-      document.getElementById("investForm").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        if (isSubmitting) return;
-        isSubmitting = true;
+      document
+        .getElementById("investForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          if (isSubmitting) return;
+          isSubmitting = true;
 
-        const submitBtn = document.getElementById("submitBtn");
-        submitBtn.disabled   = true;
-        submitBtn.innerHTML  = `<i class="ri-loader-4-line"></i> Processing…`;
+          const submitBtn = document.getElementById("submitBtn");
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = `<i class="ri-loader-4-line"></i> Processing…`;
 
-        const round_id  = document.getElementById("round").value;
-        if (!round_id)  { alert("Please select a funding round"); isSubmitting = false; submitBtn.disabled = false; submitBtn.innerHTML = `<i class="ri-send-plane-line"></i> Invest Now →`; return; }
-
-        const amount    = document.getElementById("amount").value;
-        const equity    = document.getElementById("equity").value;
-        const firm_name = document.getElementById("firm_name").value;
-        const country   = document.getElementById("country").value;
-
-        try {
-          const res = await fetch("http://localhost:5000/addInvestment", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ round_id, user_id, username, firm_name, country, amount, equity }),
-          });
-          const msg = await res.text();
-          if (res.ok) {
-            localStorage.removeItem("selected_invest_startup_id");
-            localStorage.removeItem("selected_invest_startup_name");
-            // Show success toast then redirect
-            showToast("🎉 " + msg, "success");
-            setTimeout(() => window.location.href = "my_investments.html", 1800);
-          } else {
-            showToast("❌ " + msg, "error");
+          const round_id = document.getElementById("round").value;
+          if (!round_id) {
+            showToast("Please select a funding round", "warning");
+            isSubmitting = false;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<i class="ri-send-plane-line"></i> Invest Now →`;
+            return;
           }
-        } catch (err) {
-          console.error(err);
-          showToast("❌ Network error — check your connection", "error");
-        } finally {
-          isSubmitting = false;
-          submitBtn.disabled  = false;
-          submitBtn.innerHTML = `<i class="ri-send-plane-line"></i> Invest Now →`;
-        }
-      });
 
-      // ── Toast helper ──
-      function showToast(msg, type) {
-        const t = document.createElement("div");
-        t.textContent = msg;
-        Object.assign(t.style, {
-          position:"fixed", bottom:"2rem", left:"50%", transform:"translateX(-50%) translateY(20px)",
-          background: type === "success" ? "#10b981" : "#ef4444",
-          color:"#fff", padding:"0.75rem 1.5rem", borderRadius:"12px", fontWeight:"600",
-          boxShadow:"0 8px 32px rgba(0,0,0,0.2)", zIndex:"9999", transition:"all 0.3s", opacity:"0"
+          const amount = document.getElementById("amount").value;
+          const equity = document.getElementById("equity").value;
+          const firm_name = document.getElementById("firm_name").value;
+          const country = document.getElementById("country").value;
+
+          try {
+            const res = await fetch("http://localhost:5000/addInvestment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                round_id,
+                user_id,
+                username,
+                firm_name,
+                country,
+                amount,
+                equity,
+              }),
+            });
+            const data = await res.json();
+            if (res.ok) {
+              localStorage.removeItem("selected_invest_startup_id");
+              localStorage.removeItem("selected_invest_startup_name");
+              showToast("🎉 " + data.message, "success");
+              showReceiptButton(data.investment_id);
+            } else {
+              showToast("❌ " + (data.message || "Investment failed"), "error");
+            }
+          } catch (err) {
+            console.error(err);
+            showToast("❌ Network error — check your connection", "error");
+          } finally {
+            isSubmitting = false;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<i class="ri-send-plane-line"></i> Invest Now →`;
+          }
         });
-        document.body.appendChild(t);
-        requestAnimationFrame(() => { t.style.opacity = "1"; t.style.transform = "translateX(-50%) translateY(0)"; });
-        setTimeout(() => { t.style.opacity = "0"; setTimeout(() => t.remove(), 300); }, 3000);
+
+      function showReceiptButton(investmentId) {
+        const receiptControls = document.getElementById("receiptControls");
+        const downloadBtn = document.getElementById("downloadCertificateBtn");
+        if (!investmentId || !downloadBtn || !receiptControls) return;
+
+        receiptControls.style.display = "block";
+        downloadBtn.onclick = () => {
+          window.open(
+            `http://localhost:5000/investmentReceipt/${investmentId}`,
+            "_blank",
+          );
+        };
       }
 
       // ── Init ──
-      (async () => { await ensureInvestor(); await loadRounds(); })();
+      (async () => {
+        await ensureInvestor();
+        await loadRounds();
+      })();
     </script>
-  <script>
-(function() {
-  var name = localStorage.getItem("username") || "User";
-  var role = localStorage.getItem("role") || "Member";
-  var initials = name.split(" ").map(function(w){return w[0]||"";}).join("").slice(0,2).toUpperCase();
-  var brand = document.querySelector(".sidebar-brand");
-  if (brand) {
-    var chip = document.createElement("div");
-    chip.className = "sidebar-user-chip";
-    chip.innerHTML = "<div class=\"sidebar-user-avatar\">" + initials + "</div><div class=\"sidebar-user-info\"><div class=\"sidebar-user-name\">" + name + "</div><div class=\"sidebar-user-role\">" + role + "</div></div>";
-    var title = brand.querySelector(".sidebar-title");
-    if (title && title.nextSibling) {
-      brand.insertBefore(chip, title.nextSibling);
-    } else {
-      brand.appendChild(chip);
-    }
-  }
-})();
-</script>
-</body>
+    <script>
+      (function () {
+        var name = localStorage.getItem("username") || "User";
+        var role = localStorage.getItem("role") || "Member";
+        var initials = name
+          .split(" ")
+          .map(function (w) {
+            return w[0] || "";
+          })
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        var brand = document.querySelector(".sidebar-brand");
+        if (brand) {
+          var chip = document.createElement("div");
+          chip.className = "sidebar-user-chip";
+          chip.innerHTML =
+            '<div class="sidebar-user-avatar">' +
+            initials +
+            '</div><div class="sidebar-user-info"><div class="sidebar-user-name">' +
+            name +
+            '</div><div class="sidebar-user-role">' +
+            role +
+            "</div></div>";
+          var title = brand.querySelector(".sidebar-title");
+          if (title && title.nextSibling) {
+            brand.insertBefore(chip, title.nextSibling);
+          } else {
+            brand.appendChild(chip);
+          }
+        }
+      })();
+    </script>
+  </body>
 </html>

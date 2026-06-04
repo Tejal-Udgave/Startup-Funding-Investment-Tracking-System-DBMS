@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -8,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css" />
     <script src="theme.js"></script>
+    <script src="toast.js"></script>
   </head>
   <body>
     <div class="orb orb-1"></div>
@@ -17,10 +17,13 @@
       <div class="auth-shell">
         <section class="auth-showcase">
           <div>
-            <div class="auth-kicker"><i class="ri-shield-star-line"></i> Investor + Founder Access</div>
+            <div class="auth-kicker">
+              <i class="ri-shield-star-line"></i> Investor + Founder Access
+            </div>
             <h2>Welcome back to the workspace where funding stays readable.</h2>
             <p>
-              Sign in to continue tracking startups, equity, valuation, and investor activity through one cleaner system.
+              Sign in to continue tracking startups, equity, valuation, and
+              investor activity through one cleaner system.
             </p>
             <div class="auth-showcase-mini">
               <div class="auth-mini-card">
@@ -33,7 +36,9 @@
               </div>
             </div>
           </div>
-          <div class="text-sm text-white/70">SFITS keeps your startup finance flow structured and fast.</div>
+          <div class="text-sm text-white/70">
+            SFITS keeps your startup finance flow structured and fast.
+          </div>
         </section>
 
         <section class="auth-card-wrap">
@@ -44,23 +49,41 @@
             <form id="loginForm">
               <div class="form-group">
                 <label for="email">Email Address</label>
-                <input id="email" type="email" placeholder="you@example.com" required />
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  required
+                />
               </div>
               <div class="form-group">
                 <label for="password">Password</label>
-                <input id="password" type="password" placeholder="........" required />
+                <input
+                  id="password"
+                  type="password"
+                  placeholder="........"
+                  required
+                />
               </div>
-              <button type="submit" class="btn btn-gradient btn-full" style="margin-top: 0.5rem;">
+              <button
+                type="submit"
+                class="btn btn-gradient btn-full"
+                style="margin-top: 0.5rem"
+              >
                 Sign In
               </button>
             </form>
 
             <div class="auth-switch-row">
-              <div class="auth-link" style="margin-top:0;">
+              <div class="auth-link" style="margin-top: 0">
                 Don't have an account?
                 <a href="signup.html" data-auth-switch="signup">Sign up</a>
               </div>
-              <a href="signup.html" class="auth-switch-button" data-auth-switch="signup">
+              <a
+                href="signup.html"
+                class="auth-switch-button"
+                data-auth-switch="signup"
+              >
                 <i class="ri-arrow-right-line"></i>
                 Create account
               </a>
@@ -81,56 +104,63 @@
       }
       sessionStorage.removeItem("auth-entry");
 
-      document.querySelectorAll("[data-auth-switch='signup']").forEach((link) => {
-        link.addEventListener("click", function (e) {
-          e.preventDefault();
-          sessionStorage.setItem("auth-entry", "from-login");
-          authCard.classList.remove("auth-card-enter-left", "auth-card-enter-right");
-          authCard.classList.add("auth-card-exit-left");
-          setTimeout(() => {
-            window.location.href = this.getAttribute("href");
-          }, 420);
-        });
-      });
-
-      document.getElementById("loginForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-
-        try {
-          const res = await fetch("http://localhost:5000/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
+      document
+        .querySelectorAll("[data-auth-switch='signup']")
+        .forEach((link) => {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            sessionStorage.setItem("auth-entry", "from-login");
+            authCard.classList.remove(
+              "auth-card-enter-left",
+              "auth-card-enter-right",
+            );
+            authCard.classList.add("auth-card-exit-left");
+            setTimeout(() => {
+              window.location.href = this.getAttribute("href");
+            }, 420);
           });
+        });
 
-          if (!res.ok) {
-            alert("Invalid email or password");
-            return;
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          try {
+            const res = await fetch("http://localhost:5000/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, password }),
+            });
+
+            if (!res.ok) {
+              showToast("Invalid email or password", "error");
+              return;
+            }
+
+            const data = await res.json();
+
+            localStorage.setItem("user_id", data.user_id);
+            localStorage.setItem("username", data.username);
+            localStorage.setItem("role", data.role);
+
+            if (data.investor_id) {
+              localStorage.setItem("investor_id", data.investor_id);
+            }
+
+            if (data.role === "investor") {
+              window.location.href = "investor_dashboard.html";
+            } else {
+              window.location.href = "founder_dashboard.html";
+            }
+          } catch (err) {
+            showToast("Server error. Make sure backend is running.", "error");
+            console.error(err);
           }
-
-          const data = await res.json();
-
-          localStorage.setItem("user_id", data.user_id);
-          localStorage.setItem("username", data.username);
-          localStorage.setItem("role", data.role);
-
-          if (data.investor_id) {
-            localStorage.setItem("investor_id", data.investor_id);
-          }
-
-          if (data.role === "investor") {
-            window.location.href = "investor_dashboard.html";
-          } else {
-            window.location.href = "founder_dashboard.html";
-          }
-        } catch (err) {
-          alert("Server error. Make sure backend is running.");
-          console.error(err);
-        }
-      });
+        });
     </script>
   </body>
 </html>

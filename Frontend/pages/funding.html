@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../styles.css" />
     <script src="../theme.js"></script>
+    <script src="../toast.js"></script>
   </head>
   <body>
     <div class="orb orb-1"></div>
@@ -38,6 +39,12 @@
             <a href="startups.html"
               ><span class="nav-icon"><i class="ri-rocket-line"></i></span> My
               Startups</a
+            >
+          </li>
+          <li>
+            <a href="startup_profile.html"
+              ><span class="nav-icon"><i class="ri-profile-line"></i></span>
+              Startup Profile</a
             >
           </li>
           <li>
@@ -208,6 +215,7 @@
                   <th>Date</th>
                   <th>Valuation</th>
                   <th>Funding Goal</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody id="fundingTable"></tbody>
@@ -218,10 +226,11 @@
     </div>
 
     <script>
+      let editingRoundId = null; // new added for edit button
       window.onload = async function () {
         const user_id = localStorage.getItem("user_id");
         if (!user_id) {
-          alert("Please login first");
+          showToast("Please login first", "warning");
           window.location.href = "../login.html";
           return;
         }
@@ -263,13 +272,13 @@
         event.preventDefault();
         const startup_id = document.getElementById("startup_id").value;
         if (!startup_id) {
-          alert("Select startup");
+          showToast("Select startup", "warning");
           return;
         }
 
         localStorage.setItem("startup_id", startup_id);
 
-        const res = await fetch("http://localhost:5000/addFunding", {
+        /*const res = await fetch("http://localhost:5000/addFunding", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -279,27 +288,83 @@
             valuation: document.getElementById("valuation").value,
             total_amount_raised: document.getElementById("amount").value,
           }),
-        });
+        });*/
+
+        const payload = {
+          startup_id,
+          round_type: document.getElementById("round_type").value,
+          round_date: document.getElementById("date").value,
+          valuation: document.getElementById("valuation").value,
+          total_amount_raised: document.getElementById("amount").value,
+        };
+
+        let res;
+
+        if (editingRoundId) {
+          res = await fetch(
+            `http://localhost:5000/updateFunding/${editingRoundId}`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            },
+          );
+        } else {
+          res = await fetch("http://localhost:5000/addFunding", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+        }
 
         if (res.ok) {
-          alert("Funding added");
+          const isUpdate = !!editingRoundId;
+          editingRoundId = null;
+
+          document.querySelector("#fundingForm button").innerHTML =
+            '<i class="ri-bank-card-line"></i> Add Round';
+          // showToast("Funding added", "success");
+          showToast(
+            editingRoundId ? "Funding round updated" : "Funding added",
+            "success",
+          );
           document.getElementById("fundingForm").reset();
           await loadStartups();
           loadFunding();
         } else {
-          alert(await res.text());
+          showToast(await res.text(), "error");
         }
+      }
+
+      // date formatting
+      function formatDate(dateString) {
+        return new Date(dateString).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
       }
 
       async function loadFunding() {
         const user_id = localStorage.getItem("user_id");
         const res = await fetch(`http://localhost:5000/funding/${user_id}`);
         const data = await res.json();
+        // changes added for filtering only that startup data
+        const startup_id = localStorage.getItem("startup_id");
+
+        const filtered = data.filter(
+          (r) => r.startup_id === startup_id && r.round_type !== "Initial",
+        );
+        // end of the changes block
+        // editing start
+        window.currentFundingRounds = filtered;
+
         const table = document.getElementById("fundingTable");
 
         table.innerHTML = "";
-        if (data.length === 0) {
-          table.innerHTML = `<tr><td colspan="5" class="text-center py-8" style="color:var(--text-muted);">No funding rounds yet</td></tr>`;
+        // data.length --> filtered.length
+        if (filtered.length === 0) {
+          table.innerHTML = `<tr><td colspan="6" class="text-center py-8" style="color:var(--text-muted);">No funding rounds yet</td></tr>`;
           return;
         }
 
@@ -311,30 +376,76 @@
           "Series C": "badge-teal",
           Initial: "badge-teal",
         };
-
-        data.forEach((round) => {
-          table.innerHTML += `<tr><td class="font-semibold" style="color:var(--text-primary);">${round.startup_name}</td><td><span class="badge ${roundColors[round.round_type] || "badge-blue"}">${round.round_type}</span></td><td>${round.round_date}</td><td><span class="font-bold" style="color:var(--accent-blue);">Rs ${Number(round.valuation).toLocaleString()}</span></td><td><span class="font-bold" style="color:var(--accent-green);">Rs ${Number(round.total_amount_raised).toLocaleString()}</span></td></tr>`;
+        // data.forEach --> filtered.forEach
+        filtered.forEach((round) => {
+          table.innerHTML += `<tr><td class="font-semibold" style="color:var(--text-primary);">${round.startup_name}</td><td><span class="badge ${roundColors[round.round_type] || "badge-blue"}">${round.round_type}</span></td><td>${formatDate(round.round_date)}</td><td><span class="font-bold" style="color:var(--accent-blue);">Rs ${Number(round.valuation).toLocaleString()}</span></td><td><span class="font-bold" style="color:var(--accent-green);">Rs ${Number(round.total_amount_raised).toLocaleString()}</span></td>
+          <td>
+          <button
+            onclick="editFunding('${round.round_id}')"
+            class="btn btn-primary btn-sm"
+          >
+            Edit
+          </button>
+          </td></tr>`;
         });
       }
+
+      // editing function
+      function editFunding(round_id) {
+        const round = window.currentFundingRounds.find(
+          (r) => r.round_id === round_id,
+        );
+
+        if (!round) return;
+
+        document.getElementById("startup_id").value = round.startup_id;
+        document.getElementById("round_type").value = round.round_type;
+        document.getElementById("date").value = round.round_date.split("T")[0];
+
+        document.getElementById("valuation").value = round.valuation;
+
+        document.getElementById("amount").value = round.total_amount_raised;
+
+        editingRoundId = round_id;
+
+        document.querySelector("#fundingForm button").innerHTML =
+          '<i class="ri-edit-line"></i> Update Round';
+      }
+
+      // end of editing
     </script>
-  <script>
-(function() {
-  var name = localStorage.getItem("username") || "User";
-  var role = localStorage.getItem("role") || "Member";
-  var initials = name.split(" ").map(function(w){return w[0]||"";}).join("").slice(0,2).toUpperCase();
-  var brand = document.querySelector(".sidebar-brand");
-  if (brand) {
-    var chip = document.createElement("div");
-    chip.className = "sidebar-user-chip";
-    chip.innerHTML = "<div class=\"sidebar-user-avatar\">" + initials + "</div><div class=\"sidebar-user-info\"><div class=\"sidebar-user-name\">" + name + "</div><div class=\"sidebar-user-role\">" + role + "</div></div>";
-    var title = brand.querySelector(".sidebar-title");
-    if (title && title.nextSibling) {
-      brand.insertBefore(chip, title.nextSibling);
-    } else {
-      brand.appendChild(chip);
-    }
-  }
-})();
-</script>
-</body>
+    <script>
+      (function () {
+        var name = localStorage.getItem("username") || "User";
+        var role = localStorage.getItem("role") || "Member";
+        var initials = name
+          .split(" ")
+          .map(function (w) {
+            return w[0] || "";
+          })
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        var brand = document.querySelector(".sidebar-brand");
+        if (brand) {
+          var chip = document.createElement("div");
+          chip.className = "sidebar-user-chip";
+          chip.innerHTML =
+            '<div class="sidebar-user-avatar">' +
+            initials +
+            '</div><div class="sidebar-user-info"><div class="sidebar-user-name">' +
+            name +
+            '</div><div class="sidebar-user-role">' +
+            role +
+            "</div></div>";
+          var title = brand.querySelector(".sidebar-title");
+          if (title && title.nextSibling) {
+            brand.insertBefore(chip, title.nextSibling);
+          } else {
+            brand.appendChild(chip);
+          }
+        }
+      })();
+    </script>
+  </body>
 </html>

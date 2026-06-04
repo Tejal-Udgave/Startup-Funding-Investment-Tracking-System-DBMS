@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../styles.css" />
     <script src="../theme.js"></script>
+    <script src="../toast.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
@@ -39,6 +40,12 @@
             <a href="startups.html"
               ><span class="nav-icon"><i class="ri-rocket-line"></i></span> My
               Startups</a
+            >
+          </li>
+          <li>
+            <a href="startup_profile.html"
+              ><span class="nav-icon"><i class="ri-profile-line"></i></span>
+              Startup Profile</a
             >
           </li>
           <li>
@@ -182,7 +189,7 @@
       window.onload = async function () {
         const user_id = localStorage.getItem("user_id");
         if (!user_id) {
-          alert("Please login first");
+          showToast("Please login first", "warning");
           window.location.href = "../login.html";
           return;
         }
@@ -232,8 +239,30 @@
 
         localStorage.setItem("startup_id", startup_id);
 
-        const res = await fetch(`http://localhost:5000/history/${startup_id}`);
-        const data = await res.json();
+        let data = [];
+        try {
+          const res = await fetch(
+            `http://localhost:5000/history/${startup_id}`,
+          );
+          if (!res.ok) {
+            table.innerHTML = `<tr><td colspan="4" class="text-center py-8" style="color:var(--text-muted);">Unable to load history data</td></tr>`;
+            if (chart) {
+              chart.destroy();
+              chart = null;
+            }
+            console.error("History load failed:", res.status, await res.text());
+            return;
+          }
+          data = await res.json();
+        } catch (fetchErr) {
+          table.innerHTML = `<tr><td colspan="4" class="text-center py-8" style="color:var(--text-muted);">Unable to load history data</td></tr>`;
+          if (chart) {
+            chart.destroy();
+            chart = null;
+          }
+          console.error("History fetch error:", fetchErr);
+          return;
+        }
 
         table.innerHTML = "";
 
@@ -323,9 +352,12 @@
           });
 
           Object.values(unique)
-            .sort((left, right) => left.stakeholder.localeCompare(right.stakeholder))
+            .sort((left, right) =>
+              left.stakeholder.localeCompare(right.stakeholder),
+            )
             .forEach((entry) => {
-              const typeLabel = entry.stakeholder_label || entry.stakeholder_type;
+              const typeLabel =
+                entry.stakeholder_label || entry.stakeholder_type;
               const typeClass =
                 entry.stakeholder_type === "Founder"
                   ? "badge-blue"
@@ -422,7 +454,9 @@
         chart = new Chart(document.getElementById("chart"), {
           type: "line",
           data: {
-            labels: rounds.map((roundId) => roundMeta[roundId]?.round_type || "Round"),
+            labels: rounds.map(
+              (roundId) => roundMeta[roundId]?.round_type || "Round",
+            ),
             datasets,
           },
           options: {
@@ -452,24 +486,38 @@
         });
       }
     </script>
-  <script>
-(function() {
-  var name = localStorage.getItem("username") || "User";
-  var role = localStorage.getItem("role") || "Member";
-  var initials = name.split(" ").map(function(w){return w[0]||"";}).join("").slice(0,2).toUpperCase();
-  var brand = document.querySelector(".sidebar-brand");
-  if (brand) {
-    var chip = document.createElement("div");
-    chip.className = "sidebar-user-chip";
-    chip.innerHTML = "<div class=\"sidebar-user-avatar\">" + initials + "</div><div class=\"sidebar-user-info\"><div class=\"sidebar-user-name\">" + name + "</div><div class=\"sidebar-user-role\">" + role + "</div></div>";
-    var title = brand.querySelector(".sidebar-title");
-    if (title && title.nextSibling) {
-      brand.insertBefore(chip, title.nextSibling);
-    } else {
-      brand.appendChild(chip);
-    }
-  }
-})();
-</script>
-</body>
+    <script>
+      (function () {
+        var name = localStorage.getItem("username") || "User";
+        var role = localStorage.getItem("role") || "Member";
+        var initials = name
+          .split(" ")
+          .map(function (w) {
+            return w[0] || "";
+          })
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        var brand = document.querySelector(".sidebar-brand");
+        if (brand) {
+          var chip = document.createElement("div");
+          chip.className = "sidebar-user-chip";
+          chip.innerHTML =
+            '<div class="sidebar-user-avatar">' +
+            initials +
+            '</div><div class="sidebar-user-info"><div class="sidebar-user-name">' +
+            name +
+            '</div><div class="sidebar-user-role">' +
+            role +
+            "</div></div>";
+          var title = brand.querySelector(".sidebar-title");
+          if (title && title.nextSibling) {
+            brand.insertBefore(chip, title.nextSibling);
+          } else {
+            brand.appendChild(chip);
+          }
+        }
+      })();
+    </script>
+  </body>
 </html>

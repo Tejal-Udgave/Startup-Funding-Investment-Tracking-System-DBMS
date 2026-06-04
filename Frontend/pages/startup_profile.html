@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Startup Profile - SFITS</title>
+    <meta
+      name="description"
+      content="Create and update startup profile and product information."
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../styles.css" />
+    <script src="../theme.js"></script>
+    <script src="../toast.js"></script>
+    <style>
+      .section-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-glass);
+        border-radius: 24px;
+        padding: 1.75rem;
+        box-shadow: var(--shadow-sm);
+      }
+      .section-title {
+        font-size: 1rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+      }
+      .profile-banner {
+        border-radius: 20px;
+        background: rgba(99, 102, 241, 0.08);
+        border: 1px solid rgba(99, 102, 241, 0.14);
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        color: var(--accent-indigo);
+      }
+      .timeline-item {
+        border-left: 3px solid var(--gradient-green);
+        padding-left: 1rem;
+        margin-bottom: 1rem;
+      }
+      .timeline-item strong {
+        display: block;
+        margin-bottom: 0.25rem;
+        color: var(--text-primary);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="app-layout">
+      <nav class="sidebar founder">
+        <div class="sidebar-brand">
+          <div class="sidebar-title">SFITS</div>
+          <div class="sidebar-subtitle">
+            <i class="ri-sparkling-2-line"></i> Workspace
+          </div>
+          <div class="sidebar-role-chip">
+            <i class="ri-building-2-line"></i>
+            <span>Founder Panel</span>
+          </div>
+          <p class="sidebar-role-note">
+            Manage the startup narrative and product story investors need to
+            fund your vision.
+          </p>
+        </div>
+        <ul class="sidebar-nav">
+          <li>
+            <a href="../founder_dashboard.html"
+              ><span class="nav-icon"><i class="ri-dashboard-line"></i></span>
+              Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="startups.html"
+              ><span class="nav-icon"><i class="ri-rocket-line"></i></span> My
+              Startups</a
+            >
+          </li>
+          <li>
+            <a href="startup_profile.html" class="active"
+              ><span class="nav-icon"><i class="ri-profile-line"></i></span>
+              Startup Profile</a
+            >
+          </li>
+          <li>
+            <a href="founders.html"
+              ><span class="nav-icon"><i class="ri-team-line"></i></span>
+              Founders</a
+            >
+          </li>
+          <li>
+            <a href="funding.html"
+              ><span class="nav-icon"
+                ><i class="ri-money-dollar-circle-line"></i
+              ></span>
+              Funding</a
+            >
+          </li>
+          <li>
+            <a href="captable.html"
+              ><span class="nav-icon"><i class="ri-pie-chart-line"></i></span>
+              Cap Table</a
+            >
+          </li>
+          <li>
+            <a href="history.html"
+              ><span class="nav-icon"><i class="ri-time-line"></i></span>
+              History</a
+            >
+          </li>
+        </ul>
+        <div class="sidebar-bottom">
+          <a href="../welcome.html" onclick="localStorage.clear()"
+            ><i class="ri-logout-box-r-line"></i> Logout</a
+          >
+        </div>
+      </nav>
+
+      <div class="main-content">
+        <div class="workspace-header-card animate-fade-in-down">
+          <div>
+            <div class="role-badge founder mb-2">
+              <i class="ri-profile-line"></i> Startup Profile
+            </div>
+            <h1
+              class="text-2xl font-extrabold tracking-tight"
+              style="color: var(--text-primary)"
+            >
+              Startup Profile & Product Information
+            </h1>
+            <p class="text-sm mt-1" style="color: var(--text-muted)">
+              Build the story investors need: product details, market insights,
+              features, and roadmap.
+            </p>
+          </div>
+        </div>
+
+        <div
+          id="startupSelector"
+          class="profile-banner animate-fade-in-up delay-1"
+          style="display: none"
+        ></div>
+
+        <div id="profileContent" class="animate-fade-in-up delay-2">
+          <div class="section-card mb-6">
+            <div class="section-title">Manage Your Startup Profile</div>
+            <div class="form-grid cols-2 gap-4">
+              <div>
+                <label for="startupPicker">Selected Startup</label>
+                <select id="startupPicker" class="input-field"></select>
+              </div>
+              <div>
+                <label>&nbsp;</label>
+                <div
+                  id="profileStatus"
+                  style="
+                    padding: 0.9rem 1rem;
+                    border-radius: 16px;
+                    background: var(--bg-surface);
+                    border: 1px solid var(--border-glass);
+                    color: var(--text-primary);
+                    font-weight: 600;
+                  "
+                >
+                  Loading profile...
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <form id="profileForm" class="form-grid cols-1 gap-4">
+            <div class="section-card">
+              <div class="section-title">About Startup</div>
+              <div class="form-grid cols-2 gap-4">
+                <div>
+                  <label for="description">Startup Description</label>
+                  <textarea
+                    id="description"
+                    rows="4"
+                    class="input-field"
+                    placeholder="Describe what your startup does"
+                  ></textarea>
+                </div>
+                <div>
+                  <label for="problem_statement">Problem Solved</label>
+                  <textarea
+                    id="problem_statement"
+                    rows="4"
+                    class="input-field"
+                    placeholder="What customer pain are you solving?"
+                  ></textarea>
+                </div>
+                <div>
+                  <label for="target_market">Target Market</label>
+                  <textarea
+                    id="target_market"
+                    rows="3"
+                    class="input-field"
+                    placeholder="Who are your customers?"
+                  ></textarea>
+                </div>
+                <div>
+                  <label for="business_model">Business Model</label>
+                  <textarea
+                    id="business_model"
+                    rows="3"
+                    class="input-field"
+                    placeholder="How does the startup make money?"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-title">Product Information</div>
+              <div class="form-grid cols-2 gap-4">
+                <div>
+                  <label for="product_name">Product Name</label>
+                  <input
+                    id="product_name"
+                    class="input-field"
+                    placeholder="e.g. FinPulse"
+                  />
+                </div>
+                <div>
+                  <label for="product_category">Product Category</label>
+                  <input
+                    id="product_category"
+                    class="input-field"
+                    placeholder="e.g. SaaS, Mobile App"
+                  />
+                </div>
+                <div>
+                  <label for="current_version">Current Version</label>
+                  <input
+                    id="current_version"
+                    class="input-field"
+                    placeholder="e.g. 2.1"
+                  />
+                </div>
+                <div>
+                  <label for="product_price">Product Price</label>
+                  <input
+                    id="product_price"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    class="input-field"
+                    placeholder="e.g. 2999.00"
+                  />
+                </div>
+                <div>
+                  <label for="launch_date">Launch Date</label>
+                  <input id="launch_date" type="date" class="input-field" />
+                </div>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-title">Key Features</div>
+              <textarea
+                id="features"
+                rows="6"
+                class="input-field"
+                placeholder="List product features, one per line"
+              ></textarea>
+              <p
+                style="
+                  font-size: 0.84rem;
+                  color: var(--text-muted);
+                  margin-top: 0.5rem;
+                "
+              >
+                Each line becomes a feature card for investors.
+              </p>
+            </div>
+
+            <div class="section-card">
+              <div class="section-title">Market Information</div>
+              <div class="form-grid cols-2 gap-4">
+                <div>
+                  <label for="market_size">Market Size</label>
+                  <input
+                    id="market_size"
+                    class="input-field"
+                    placeholder="e.g. $5B market"
+                  />
+                </div>
+                <div>
+                  <label for="competitors">Competitors</label>
+                  <input
+                    id="competitors"
+                    class="input-field"
+                    placeholder="List major competitors"
+                  />
+                </div>
+                <div>
+                  <label for="current_customers">Current Customers</label>
+                  <input
+                    id="current_customers"
+                    type="number"
+                    min="0"
+                    class="input-field"
+                    placeholder="e.g. 250"
+                  />
+                </div>
+                <div>
+                  <label for="monthly_revenue">Monthly Revenue</label>
+                  <input
+                    id="monthly_revenue"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    class="input-field"
+                    placeholder="e.g. 150000"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-title">Future Roadmap</div>
+              <textarea
+                id="future_roadmap"
+                rows="5"
+                class="input-field"
+                placeholder="Outline upcoming product releases and expansion plans."
+              ></textarea>
+            </div>
+
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 0.75rem;
+              "
+            >
+              <button
+                id="saveProfileBtn"
+                type="submit"
+                class="btn btn-gradient btn-full btn-sm"
+              >
+                Save Profile
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const user_id = localStorage.getItem("user_id");
+      const role = localStorage.getItem("role");
+      if (!user_id) {
+        window.location.href = "../login.html";
+      }
+
+      const startupPicker = document.getElementById("startupPicker");
+      const profileStatus = document.getElementById("profileStatus");
+      const profileContent = document.getElementById("profileContent");
+      const startupSelector = document.getElementById("startupSelector");
+      let currentStartupId = localStorage.getItem("startup_id");
+      let currentStartupName = localStorage.getItem("startup_name");
+
+      async function loadStartups() {
+        try {
+          const res = await fetch(`http://localhost:5000/startups/${user_id}`);
+          const startups = await res.json();
+
+          if (!Array.isArray(startups) || startups.length === 0) {
+            profileStatus.textContent =
+              "No startups found for your account. Create a startup first.";
+            profileContent.style.display = "none";
+            return;
+          }
+
+          startupPicker.innerHTML = "";
+          startups.forEach((s) => {
+            const option = document.createElement("option");
+            option.value = s.startup_id;
+            option.textContent =
+              s.startup_name + (s.stage ? ` (${s.stage})` : "");
+            if (!currentStartupId && startups.length === 1) {
+              currentStartupId = s.startup_id;
+              currentStartupName = s.startup_name;
+            }
+            if (s.startup_id === currentStartupId) {
+              option.selected = true;
+            }
+            startupPicker.appendChild(option);
+          });
+
+          startupPicker.addEventListener("change", () => {
+            const selected = startupPicker.options[startupPicker.selectedIndex];
+            currentStartupId = selected.value;
+            currentStartupName = selected.textContent.replace(/\s+\(.+\)$/, "");
+            localStorage.setItem("startup_id", currentStartupId);
+            localStorage.setItem("startup_name", currentStartupName);
+            loadProfile(currentStartupId);
+          });
+
+          if (currentStartupId) {
+            startupPicker.value = currentStartupId;
+            loadProfile(currentStartupId);
+          } else {
+            startupStatus("Select a startup to begin.");
+          }
+        } catch (err) {
+          console.error(err);
+          startupStatus("Unable to load startups. Check your connection.");
+        }
+      }
+
+      function startupStatus(message) {
+        profileStatus.textContent = message;
+        profileStatus.style.color = "var(--text-muted)";
+      }
+
+      async function loadProfile(startup_id) {
+        profileContent.style.display = "";
+        startupStatus(
+          `Loading profile for ${currentStartupName || startup_id}...`,
+        );
+        if (startupSelector) {
+          startupSelector.innerHTML = `<strong>Editing profile for:</strong> ${currentStartupName || startup_id}`;
+          startupSelector.style.display = "block";
+        }
+
+        try {
+          const res = await fetch(
+            `http://localhost:5000/startupProfile/${startup_id}`,
+          );
+          const profile = await res.json();
+          const exists = profile && Object.keys(profile).length > 0;
+
+          document.getElementById("description").value =
+            profile.description || "";
+          document.getElementById("problem_statement").value =
+            profile.problem_statement || "";
+          document.getElementById("target_market").value =
+            profile.target_market || "";
+          document.getElementById("business_model").value =
+            profile.business_model || "";
+          document.getElementById("product_name").value =
+            profile.product_name || "";
+          document.getElementById("product_category").value =
+            profile.product_category || "";
+          document.getElementById("current_version").value =
+            profile.current_version || "";
+          document.getElementById("product_price").value =
+            profile.product_price || "";
+          document.getElementById("launch_date").value =
+            profile.launch_date || "";
+          document.getElementById("features").value = profile.features || "";
+          document.getElementById("market_size").value =
+            profile.market_size || "";
+          document.getElementById("competitors").value =
+            profile.competitors || "";
+          document.getElementById("current_customers").value =
+            profile.current_customers || "";
+          document.getElementById("monthly_revenue").value =
+            profile.monthly_revenue || "";
+          document.getElementById("future_roadmap").value =
+            profile.future_roadmap || "";
+
+          document.getElementById("saveProfileBtn").textContent = exists
+            ? "Update Profile"
+            : "Save Profile";
+          startupStatus(
+            exists
+              ? "Profile loaded. Make edits and save."
+              : "No profile yet. Create one now.",
+          );
+        } catch (err) {
+          console.error(err);
+          startupStatus("Unable to load profile. Try again later.");
+        }
+      }
+
+      function normalizeNumberInput(field) {
+        if (!field) return;
+        field.value = field.value.replace(/[^0-9.]/g, "");
+      }
+
+      [
+        document.getElementById("product_price"),
+        document.getElementById("current_customers"),
+        document.getElementById("monthly_revenue"),
+      ].forEach((input) => {
+        if (!input) return;
+        input.addEventListener("input", () => normalizeNumberInput(input));
+      });
+
+      function isProfileEmpty() {
+        return [
+          "description",
+          "problem_statement",
+          "target_market",
+          "business_model",
+          "product_name",
+          "product_category",
+          "current_version",
+          "product_price",
+          "launch_date",
+          "features",
+          "market_size",
+          "competitors",
+          "current_customers",
+          "monthly_revenue",
+          "future_roadmap",
+        ].every((id) => {
+          const value = document.getElementById(id).value;
+          return value === null || value.trim() === "";
+        });
+      }
+
+      document
+        .getElementById("profileForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          if (!currentStartupId) {
+            showToast("Please select a startup first.", "error");
+            return;
+          }
+
+          if (isProfileEmpty()) {
+            showToast(
+              "Please add at least one profile field before saving.",
+              "error",
+            );
+            return;
+          }
+
+          const payload = {
+            startup_id: currentStartupId,
+            description: document.getElementById("description").value.trim(),
+            problem_statement: document
+              .getElementById("problem_statement")
+              .value.trim(),
+            target_market: document
+              .getElementById("target_market")
+              .value.trim(),
+            business_model: document
+              .getElementById("business_model")
+              .value.trim(),
+            product_name: document.getElementById("product_name").value.trim(),
+            product_category: document
+              .getElementById("product_category")
+              .value.trim(),
+            current_version: document
+              .getElementById("current_version")
+              .value.trim(),
+            product_price:
+              Number(document.getElementById("product_price").value) || null,
+            launch_date: document.getElementById("launch_date").value || null,
+            features: document.getElementById("features").value.trim(),
+            market_size: document.getElementById("market_size").value.trim(),
+            competitors: document.getElementById("competitors").value.trim(),
+            current_customers:
+              Number(document.getElementById("current_customers").value) ||
+              null,
+            monthly_revenue:
+              Number(document.getElementById("monthly_revenue").value) || null,
+            future_roadmap: document
+              .getElementById("future_roadmap")
+              .value.trim(),
+          };
+
+          try {
+            const res = await fetch("http://localhost:5000/addStartupProfile", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            const data = await res.json();
+            if (res.ok) {
+              startupStatus("Profile saved successfully.");
+              document.getElementById("saveProfileBtn").textContent =
+                "Update Profile";
+              showToast("✅ Startup details updated successfully", "success");
+            } else {
+              const message =
+                data?.message || "❌ Failed to update startup details";
+              startupStatus(message);
+              showToast("❌ Failed to update startup details", "error");
+            }
+          } catch (err) {
+            console.error(err);
+            startupStatus("Network error while saving the profile.");
+            showToast("❌ Failed to update startup details", "error");
+          }
+        });
+
+      (async () => {
+        await loadStartups();
+      })();
+    </script>
+    <script>
+      (function () {
+        const name = localStorage.getItem("username") || "Founder";
+        const role = localStorage.getItem("role") || "Founder";
+        const initials = name
+          .split(" ")
+          .map((w) => w[0] || "")
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        const brand = document.querySelector(".sidebar-brand");
+        if (brand && !brand.querySelector(".sidebar-user-chip")) {
+          const chip = document.createElement("div");
+          chip.className = "sidebar-user-chip";
+          chip.innerHTML = `<div class="sidebar-user-avatar">${initials}</div><div class="sidebar-user-info"><div class="sidebar-user-name">${name}</div><div class="sidebar-user-role">${role}</div></div>`;
+          const title = brand.querySelector(".sidebar-title");
+          if (title && title.nextSibling) {
+            brand.insertBefore(chip, title.nextSibling);
+          } else {
+            brand.appendChild(chip);
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

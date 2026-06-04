@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../styles.css" />
     <script src="../theme.js"></script>
+    <script src="../toast.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
@@ -39,6 +40,12 @@
             <a href="startups.html"
               ><span class="nav-icon"><i class="ri-rocket-line"></i></span> My
               Startups</a
+            >
+          </li>
+          <li>
+            <a href="startup_profile.html"
+              ><span class="nav-icon"><i class="ri-profile-line"></i></span>
+              Startup Profile</a
             >
           </li>
           <li>
@@ -191,7 +198,7 @@
       window.onload = async function () {
         const user_id = localStorage.getItem("user_id");
         if (!user_id) {
-          alert("Please login first");
+          showToast("Please login first", "warning");
           window.location.href = "../login.html";
           return;
         }
@@ -215,7 +222,9 @@
           dropdown.innerHTML += `<option value="${s.startup_id}">${s.startup_name}</option>`;
         });
         if (data.length > 0) {
-          const selectedStartupId = data.some((s) => s.startup_id === savedStartupId)
+          const selectedStartupId = data.some(
+            (s) => s.startup_id === savedStartupId,
+          )
             ? savedStartupId
             : data[0].startup_id;
           dropdown.value = selectedStartupId;
@@ -310,24 +319,38 @@
         });
       }
     </script>
-  <script>
-(function() {
-  var name = localStorage.getItem("username") || "User";
-  var role = localStorage.getItem("role") || "Member";
-  var initials = name.split(" ").map(function(w){return w[0]||"";}).join("").slice(0,2).toUpperCase();
-  var brand = document.querySelector(".sidebar-brand");
-  if (brand) {
-    var chip = document.createElement("div");
-    chip.className = "sidebar-user-chip";
-    chip.innerHTML = "<div class=\"sidebar-user-avatar\">" + initials + "</div><div class=\"sidebar-user-info\"><div class=\"sidebar-user-name\">" + name + "</div><div class=\"sidebar-user-role\">" + role + "</div></div>";
-    var title = brand.querySelector(".sidebar-title");
-    if (title && title.nextSibling) {
-      brand.insertBefore(chip, title.nextSibling);
-    } else {
-      brand.appendChild(chip);
-    }
-  }
-})();
-</script>
-</body>
+    <script>
+      (function () {
+        var name = localStorage.getItem("username") || "User";
+        var role = localStorage.getItem("role") || "Member";
+        var initials = name
+          .split(" ")
+          .map(function (w) {
+            return w[0] || "";
+          })
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        var brand = document.querySelector(".sidebar-brand");
+        if (brand) {
+          var chip = document.createElement("div");
+          chip.className = "sidebar-user-chip";
+          chip.innerHTML =
+            '<div class="sidebar-user-avatar">' +
+            initials +
+            '</div><div class="sidebar-user-info"><div class="sidebar-user-name">' +
+            name +
+            '</div><div class="sidebar-user-role">' +
+            role +
+            "</div></div>";
+          var title = brand.querySelector(".sidebar-title");
+          if (title && title.nextSibling) {
+            brand.insertBefore(chip, title.nextSibling);
+          } else {
+            brand.appendChild(chip);
+          }
+        }
+      })();
+    </script>
+  </body>
 </html>

@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../styles.css" />
     <script src="../theme.js"></script>
+    <script src="../toast.js"></script>
   </head>
   <body>
     <div class="orb orb-1"></div>
@@ -38,6 +39,12 @@
             <a href="startups.html" class="active"
               ><span class="nav-icon"><i class="ri-rocket-line"></i></span> My
               Startups</a
+            >
+          </li>
+          <li>
+            <a href="startup_profile.html"
+              ><span class="nav-icon"><i class="ri-profile-line"></i></span>
+              Startup Profile</a
             >
           </li>
           <li>
@@ -75,9 +82,7 @@
       </nav>
 
       <div class="main-content">
-        <div
-          class="workspace-header-card animate-fade-in-down"
-        >
+        <div class="workspace-header-card animate-fade-in-down">
           <div>
             <div class="role-badge founder mb-2">
               <i class="ri-building-line"></i> Founder Panel
@@ -93,7 +98,9 @@
             </p>
           </div>
           <div class="workspace-header-meta">
-            <div class="workspace-header-icon"><i class="ri-rocket-line"></i></div>
+            <div class="workspace-header-icon">
+              <i class="ri-rocket-line"></i>
+            </div>
             <div class="workspace-header-copy">
               <span>Workspace Focus</span>
               <strong>Startup Setup</strong>
@@ -170,6 +177,15 @@
                 <option value="I001">FinTech</option>
                 <option value="I002">HealthTech</option>
                 <option value="I003">EdTech</option>
+                <option value="I004">E-Commerce</option>
+                <option value="I005">FoodTech</option>
+                <option value="I006">Logistics</option>
+                <option value="I007">AgriTech</option>
+                <option value="I008">Mobility</option>
+                <option value="I009">Beauty & Fashion</option>
+                <option value="I010">SaaS</option>
+                <option value="I011">Gaming</option>
+                <option value="I012">Social Media</option>
               </select>
             </div>
             <div>
@@ -245,7 +261,7 @@
       window.onload = function () {
         const user_id = localStorage.getItem("user_id");
         if (!user_id) {
-          alert("Please login first");
+          showToast("Please login first", "warning");
           window.location.href = "../login.html";
           return;
         }
@@ -285,7 +301,7 @@
             const user_id = localStorage.getItem("user_id");
             const industry = document.getElementById("industry").value;
             if (!industry) {
-              alert("Please select industry");
+              showToast("Please select industry", "warning");
               return;
             }
             const data = {
@@ -305,11 +321,11 @@
             });
             const msg = await res.text();
             if (!res.ok) throw new Error(msg);
-            alert("Startup Added ✅");
+            showToast("Startup Added ✅", "success");
             document.getElementById("startupForm").reset();
             loadStartups();
           } catch (err) {
-            alert(err.message || "Error ❌");
+            showToast(err.message || "Error ❌", "error");
           }
         });
 
@@ -319,24 +335,38 @@
         window.location.href = "../founder_dashboard.html";
       }
     </script>
-  <script>
-(function() {
-  var name = localStorage.getItem("username") || "User";
-  var role = localStorage.getItem("role") || "Member";
-  var initials = name.split(" ").map(function(w){return w[0]||"";}).join("").slice(0,2).toUpperCase();
-  var brand = document.querySelector(".sidebar-brand");
-  if (brand) {
-    var chip = document.createElement("div");
-    chip.className = "sidebar-user-chip";
-    chip.innerHTML = "<div class=\"sidebar-user-avatar\">" + initials + "</div><div class=\"sidebar-user-info\"><div class=\"sidebar-user-name\">" + name + "</div><div class=\"sidebar-user-role\">" + role + "</div></div>";
-    var title = brand.querySelector(".sidebar-title");
-    if (title && title.nextSibling) {
-      brand.insertBefore(chip, title.nextSibling);
-    } else {
-      brand.appendChild(chip);
-    }
-  }
-})();
-</script>
-</body>
+    <script>
+      (function () {
+        var name = localStorage.getItem("username") || "User";
+        var role = localStorage.getItem("role") || "Member";
+        var initials = name
+          .split(" ")
+          .map(function (w) {
+            return w[0] || "";
+          })
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        var brand = document.querySelector(".sidebar-brand");
+        if (brand) {
+          var chip = document.createElement("div");
+          chip.className = "sidebar-user-chip";
+          chip.innerHTML =
+            '<div class="sidebar-user-avatar">' +
+            initials +
+            '</div><div class="sidebar-user-info"><div class="sidebar-user-name">' +
+            name +
+            '</div><div class="sidebar-user-role">' +
+            role +
+            "</div></div>";
+          var title = brand.querySelector(".sidebar-title");
+          if (title && title.nextSibling) {
+            brand.insertBefore(chip, title.nextSibling);
+          } else {
+            brand.appendChild(chip);
+          }
+        }
+      })();
+    </script>
+  </body>
 </html>

@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Startup Details - SFITS</title>
+    <meta
+      name="description"
+      content="View startup details, product information, health score and invest confidently."
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../styles.css" />
+    <script src="../theme.js"></script>
+    <script src="../toast.js"></script>
+    <style>
+      .detail-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-glass);
+        border-radius: 24px;
+        padding: 1.75rem;
+        box-shadow: var(--shadow-sm);
+      }
+      .detail-title {
+        font-size: 1rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+      }
+      .feature-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.75rem 1rem;
+        border-radius: 16px;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-glass);
+        margin-bottom: 0.75rem;
+        color: var(--text-primary);
+      }
+      .health-score {
+        border-radius: 24px;
+        padding: 1.4rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border-glass);
+        box-shadow: var(--shadow-sm);
+      }
+      .health-score strong {
+        display: block;
+        font-size: 2.5rem;
+        line-height: 1;
+      }
+      .metric-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+      .metric-chip {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        border-radius: 18px;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-glass);
+      }
+      .timeline-item {
+        border-left: 4px solid var(--gradient-blue);
+        padding-left: 1rem;
+        margin-bottom: 1rem;
+      }
+      .timeline-item strong {
+        display: block;
+        margin-bottom: 0.3rem;
+      }
+      .detail-banner {
+        border-radius: 20px;
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.14);
+        padding: 1rem 1.3rem;
+        margin-bottom: 1.5rem;
+        color: var(--accent-green);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="app-layout">
+      <nav class="sidebar investor">
+        <div class="sidebar-brand">
+          <div class="sidebar-title">SFITS</div>
+          <div class="sidebar-subtitle">
+            <i class="ri-sparkling-2-line"></i> Workspace
+          </div>
+          <div class="sidebar-role-chip">
+            <i class="ri-line-chart-line"></i>
+            <span>Investor Panel</span>
+          </div>
+          <p class="sidebar-role-note">
+            Review startup details and make investment decisions with
+            confidence.
+          </p>
+        </div>
+        <ul class="sidebar-nav">
+          <li>
+            <a href="../investor_dashboard.html"
+              ><span class="nav-icon"><i class="ri-dashboard-line"></i></span>
+              Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="browse_startups.html"
+              ><span class="nav-icon"><i class="ri-search-line"></i></span>
+              Browse Startups</a
+            >
+          </li>
+          <li>
+            <a href="invest.html"
+              ><span class="nav-icon"><i class="ri-coins-line"></i></span>
+              Invest</a
+            >
+          </li>
+          <li>
+            <a href="my_investments.html"
+              ><span class="nav-icon"
+                ><i class="ri-bar-chart-box-line"></i
+              ></span>
+              My Investments</a
+            >
+          </li>
+        </ul>
+        <div class="sidebar-bottom">
+          <a href="../welcome.html" onclick="localStorage.clear()"
+            ><i class="ri-logout-box-r-line"></i> Logout</a
+          >
+        </div>
+      </nav>
+
+      <div class="main-content">
+        <div class="workspace-header-card animate-fade-in-down">
+          <div>
+            <div class="role-badge investor mb-2">
+              <i class="ri-search-line"></i> Startup Details
+            </div>
+            <h1
+              class="text-2xl font-extrabold tracking-tight"
+              style="color: var(--text-primary)"
+            >
+              Startup Overview
+            </h1>
+            <p class="text-sm mt-1" style="color: var(--text-muted)">
+              See the startup story, product details, health score, and then
+              invest.
+            </p>
+          </div>
+        </div>
+
+        <div id="loadingState" class="detail-banner animate-fade-in-up delay-1">
+          Loading startup details...
+        </div>
+
+        <div
+          id="saveMessage"
+          class="detail-banner animate-fade-in-up delay-1"
+          style="display: none"
+        ></div>
+
+        <div
+          id="detailGrid"
+          class="grid grid-cols-1 xl:grid-cols-[2fr_1fr] gap-6"
+          style="display: none"
+        >
+          <div class="space-y-6">
+            <div class="detail-card">
+              <div class="detail-title">About Startup</div>
+              <h2
+                id="startupName"
+                class="text-xl font-extrabold mb-3"
+                style="color: var(--text-primary)"
+              ></h2>
+              <p
+                id="aboutDescription"
+                class="text-sm leading-7"
+                style="color: var(--text-muted)"
+              ></p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
+                <div>
+                  <p
+                    class="text-xs uppercase tracking-[0.18em] text-muted mb-2"
+                  >
+                    Problem Statement
+                  </p>
+                  <p id="problemStatement" class="text-sm"></p>
+                </div>
+                <div>
+                  <p
+                    class="text-xs uppercase tracking-[0.18em] text-muted mb-2"
+                  >
+                    Target Market
+                  </p>
+                  <p id="targetMarket" class="text-sm"></p>
+                </div>
+                <div>
+                  <p
+                    class="text-xs uppercase tracking-[0.18em] text-muted mb-2"
+                  >
+                    Business Model
+                  </p>
+                  <p id="businessModel" class="text-sm"></p>
+                </div>
+                <div>
+                  <p
+                    class="text-xs uppercase tracking-[0.18em] text-muted mb-2"
+                  >
+                    Current Stage
+                  </p>
+                  <p id="startupStage" class="text-sm"></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-card">
+              <div class="detail-title">Product Information</div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p
+                    class="text-xs uppercase tracking-[0.18em] text-muted mb-2"
+                  >
+                    Product
+                  </p>
+                  <p id="productName" class="font-semibold"></p>
+                </div>
+                <div>
+                  <p
+                    class="text-xs uppercase tracking-[0.18em] text-muted mb-2"
+                  >
+                    Category
+                  </p>
+                  <p id="productCategory"></p>
+                </div>
+                <div>
+                  <p
+                    class="text-xs uppercase tracking-[0.18em] text-muted mb-2"
+                  >
+                    Version
+                  </p>
+                  <p id="productVersion"></p>
+                </div>
+                <div>
+                  <p
+                    class="text-xs uppercase tracking-[0.18em] text-muted mb-2"
+                  >
+                    Price
+                  </p>
+                  <p id="productPrice"></p>
+                </div>
+                <div class="md:col-span-2">
+                  <p
+                    class="text-xs uppercase tracking-[0.18em] text-muted mb-2"
+                  >
+                    Launch Date
+                  </p>
+                  <p id="productLaunch"></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-card">
+              <div class="detail-title">Key Features</div>
+              <div
+                id="featureList"
+                class="grid grid-cols-1 sm:grid-cols-2 gap-3"
+              ></div>
+            </div>
+
+            <div class="detail-card">
+              <div class="detail-title">Market Information</div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p
+                    class="text-xs uppercase tracking-[0.18em] text-muted mb-2"
+                  >
+                    Market Size
+                  </p>
+                  <p id="marketSize"></p>
+                </div>
+                <div>
+                  <p
+                    class="text-xs uppercase tracking-[0.18em] text-muted mb-2"
+                  >
+                    Competitors
+                  </p>
+                  <p id="competitors"></p>
+                </div>
+                <div>
+                  <p
+                    class="text-xs uppercase tracking-[0.18em] text-muted mb-2"
+                  >
+                    Customers
+                  </p>
+                  <p id="customerCount"></p>
+                </div>
+                <div>
+                  <p
+                    class="text-xs uppercase tracking-[0.18em] text-muted mb-2"
+                  >
+                    Monthly Revenue
+                  </p>
+                  <p id="monthlyRevenue"></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-card">
+              <div class="detail-title">Future Roadmap</div>
+              <div id="roadmapTimeline"></div>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <div class="health-score">
+              <div class="text-sm text-muted uppercase tracking-[0.18em] mb-3">
+                Health Score
+              </div>
+              <strong id="healthScore">0 / 100</strong>
+              <div id="healthHint" class="mt-2 text-sm font-medium"></div>
+              <div class="metric-grid mt-6">
+                <div class="metric-chip">
+                  <span>Funding Score</span><span id="fundingScore"></span>
+                </div>
+                <div class="metric-chip">
+                  <span>Customer Score</span><span id="customerScore"></span>
+                </div>
+                <div class="metric-chip">
+                  <span>Revenue Score</span><span id="revenueScore"></span>
+                </div>
+                <div class="metric-chip">
+                  <span>Investor Score</span><span id="investorScore"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-card">
+              <div class="detail-title">Startup Metrics</div>
+              <div class="metric-grid">
+                <div class="metric-chip">
+                  <span>Valuation</span><strong id="metricValuation"></strong>
+                </div>
+                <div class="metric-chip">
+                  <span>Funding Goal</span><strong id="metricGoal"></strong>
+                </div>
+                <div class="metric-chip">
+                  <span>Amount Raised</span><strong id="metricRaised"></strong>
+                </div>
+                <div class="metric-chip">
+                  <span>Investors</span><strong id="metricInvestors"></strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-card">
+              <div class="detail-title">Investor Action</div>
+              <p class="text-sm text-muted mb-4">
+                Jump directly to the invest flow with this startup pre-selected.
+              </p>
+              <button id="investNowBtn" class="btn btn-gradient btn-full">
+                Invest Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const startupId =
+        params.get("startup_id") ||
+        localStorage.getItem("selected_details_startup_id");
+      const startupNameFallback =
+        localStorage.getItem("selected_details_startup_name") || "Startup";
+
+      function fmtMoney(value) {
+        if (!value || isNaN(value)) return "—";
+        const num = Number(value);
+        if (num >= 10000000) return `₹${(num / 10000000).toFixed(2)} Cr`;
+        if (num >= 100000) return `₹${(num / 100000).toFixed(2)} L`;
+        return `₹${num.toLocaleString("en-IN")}`;
+      }
+
+      function fmtDate(value) {
+        if (!value) return "—";
+        return new Date(value).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+
+      function getHealthTone(score) {
+        if (score >= 80)
+          return { text: "Strong health", color: "var(--gradient-green)" };
+        if (score >= 60)
+          return {
+            text: "Moderate health",
+            color: "var(--gradient-yellow, #f59e0b)",
+          };
+        return { text: "Weak health", color: "var(--gradient-red, #ef4444)" };
+      }
+
+      async function fetchPageData() {
+        if (!startupId) {
+          document.getElementById("loadingState").textContent =
+            "Startup not specified. Open from Browse Startups.";
+          return;
+        }
+
+        const statusParam = params.get("status");
+        const savedStatus = localStorage.getItem("startup_details_status");
+        if (savedStatus) {
+          showSaveMessage(savedStatus);
+          localStorage.removeItem("startup_details_status");
+        } else if (statusParam) {
+          showSaveMessage(getStatusMessage(statusParam));
+        }
+
+        try {
+          const [profileRes, dashboardRes, healthRes] = await Promise.all([
+            fetch(`http://localhost:5000/startupProfile/${startupId}`),
+            fetch(`http://localhost:5000/startupDashboard/${startupId}`),
+            fetch(`http://localhost:5000/startupHealth/${startupId}`),
+          ]);
+
+          const profile = await profileRes.json();
+          const dashboard = await dashboardRes.json();
+          const health = await healthRes.json();
+
+          const name = dashboard.startup_name || startupNameFallback;
+          document.getElementById("startupName").textContent = name;
+          document.getElementById("aboutDescription").textContent =
+            profile.description || "No startup description has been added yet.";
+          document.getElementById("problemStatement").textContent =
+            profile.problem_statement || "No problem statement available.";
+          document.getElementById("targetMarket").textContent =
+            profile.target_market || "Not specified.";
+          document.getElementById("businessModel").textContent =
+            profile.business_model || "Not specified.";
+          document.getElementById("startupStage").textContent =
+            dashboard.stage || "N/A";
+          document.getElementById("productName").textContent =
+            profile.product_name || "Not defined";
+          document.getElementById("productCategory").textContent =
+            profile.product_category || "Not defined";
+          document.getElementById("productVersion").textContent =
+            profile.current_version || "Not defined";
+          document.getElementById("productPrice").textContent =
+            profile.product_price
+              ? fmtMoney(profile.product_price)
+              : "Not defined";
+          document.getElementById("productLaunch").textContent =
+            profile.launch_date ? fmtDate(profile.launch_date) : "Not defined";
+          document.getElementById("marketSize").textContent =
+            profile.market_size || "Not defined";
+          document.getElementById("competitors").textContent =
+            profile.competitors || "Not defined";
+          document.getElementById("customerCount").textContent =
+            profile.current_customers != null
+              ? profile.current_customers
+              : "Not defined";
+          document.getElementById("monthlyRevenue").textContent =
+            profile.monthly_revenue != null
+              ? fmtMoney(profile.monthly_revenue)
+              : "Not defined";
+          document.getElementById("metricValuation").textContent = fmtMoney(
+            dashboard.valuation,
+          );
+          document.getElementById("metricGoal").textContent = fmtMoney(
+            dashboard.target_funding,
+          );
+          document.getElementById("metricRaised").textContent = fmtMoney(
+            dashboard.total_funding,
+          );
+          document.getElementById("metricInvestors").textContent =
+            dashboard.total_investors || 0;
+
+          document.getElementById("healthScore").textContent =
+            `${health.health_score} / 100`;
+          document.getElementById("fundingScore").textContent =
+            `${health.funding_score} / 40`;
+          document.getElementById("customerScore").textContent =
+            `${health.customer_score} / 25`;
+          document.getElementById("revenueScore").textContent =
+            `${health.revenue_score} / 25`;
+          document.getElementById("investorScore").textContent =
+            `${health.investor_score} / 10`;
+
+          const tone = getHealthTone(Number(health.health_score));
+          const healthHint = document.getElementById("healthHint");
+          healthHint.textContent = tone.text;
+          healthHint.style.color = tone.color;
+
+          renderFeatures(profile.features);
+          renderRoadmap(profile.future_roadmap);
+
+          document.getElementById("loadingState").style.display = "none";
+          document.getElementById("detailGrid").style.display = "grid";
+        } catch (err) {
+          console.error(err);
+          document.getElementById("loadingState").textContent =
+            "Could not load startup details. Please try again later.";
+        }
+      }
+
+      function renderFeatures(featuresText) {
+        const container = document.getElementById("featureList");
+        container.innerHTML = "";
+        const features = (featuresText || "")
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter(Boolean);
+        if (features.length === 0) {
+          container.innerHTML = `<p style="color:var(--text-muted);">No features available yet.</p>`;
+          return;
+        }
+        features.forEach((text) => {
+          const div = document.createElement("div");
+          div.className = "feature-pill";
+          div.innerHTML = `<span>✓</span><span>${text}</span>`;
+          container.appendChild(div);
+        });
+      }
+
+      function showSaveMessage(message) {
+        const messageEl = document.getElementById("saveMessage");
+        if (!message) return;
+        messageEl.textContent = message;
+        messageEl.style.display = "block";
+      }
+
+      function getStatusMessage(status) {
+        switch (status) {
+          case "saved":
+            return "Startup information saved successfully.";
+          case "updated":
+            return "Startup information updated successfully.";
+          default:
+            return status;
+        }
+      }
+
+      function renderRoadmap(roadmapText) {
+        const container = document.getElementById("roadmapTimeline");
+        container.innerHTML = "";
+        const lines = (roadmapText || "")
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter(Boolean);
+        if (lines.length === 0) {
+          container.innerHTML = `<p style="color:var(--text-muted);">No roadmap items available.</p>`;
+          return;
+        }
+        for (let i = 0; i < lines.length; i += 2) {
+          const quarter = lines[i] || "TBD";
+          const detail = lines[i + 1] || "Details coming soon.";
+          const block = document.createElement("div");
+          block.className = "timeline-item";
+          block.innerHTML = `<strong>${quarter}</strong><span>${detail}</span>`;
+          container.appendChild(block);
+        }
+      }
+
+      document.getElementById("investNowBtn").addEventListener("click", () => {
+        localStorage.setItem("selected_invest_startup_id", startupId);
+        localStorage.setItem(
+          "selected_invest_startup_name",
+          document.getElementById("startupName").textContent,
+        );
+        window.location.href = "invest.html";
+      });
+
+      fetchPageData();
+    </script>
+
+    <script>
+      (function () {
+        var name = localStorage.getItem("username") || "User";
+        var role = localStorage.getItem("role") || "Member";
+        var initials = name
+          .split(" ")
+          .map(function (w) {
+            return w[0] || "";
+          })
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        var brand = document.querySelector(".sidebar-brand");
+        if (brand) {
+          var chip = document.createElement("div");
+          chip.className = "sidebar-user-chip";
+          chip.innerHTML =
+            '<div class="sidebar-user-avatar">' +
+            initials +
+            '</div><div class="sidebar-user-info"><div class="sidebar-user-name">' +
+            name +
+            '</div><div class="sidebar-user-role">' +
+            role +
+            "</div></div>";
+          var title = brand.querySelector(".sidebar-title");
+          if (title && title.nextSibling) {
+            brand.insertBefore(chip, title.nextSibling);
+          } else {
+            brand.appendChild(chip);
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

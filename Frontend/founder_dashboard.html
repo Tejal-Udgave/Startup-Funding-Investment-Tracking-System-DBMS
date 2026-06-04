@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css" />
     <script src="theme.js"></script>
+    <script src="toast.js"></script>
   </head>
   <body>
     <div class="orb orb-1"></div>
@@ -15,43 +16,100 @@
       <nav class="sidebar founder">
         <div class="sidebar-brand">
           <div class="sidebar-title">SFITS</div>
-          <div class="sidebar-subtitle"><i class="ri-sparkling-2-line"></i> Workspace</div>
+          <div class="sidebar-subtitle">
+            <i class="ri-sparkling-2-line"></i> Workspace
+          </div>
           <div class="sidebar-role-chip">
             <i class="ri-building-2-line"></i>
             <span>Founder Panel</span>
           </div>
           <p class="sidebar-role-note">
-            Manage your startups, ownership, rounds, and investor momentum from one focused dashboard.
+            Manage your startups, ownership, rounds, and investor momentum from
+            one focused dashboard.
           </p>
         </div>
         <ul class="sidebar-nav">
-          <li><a href="#" class="active"><span class="nav-icon"><i class="ri-dashboard-line"></i></span> Dashboard</a></li>
-          <li><a href="pages/startups.html"><span class="nav-icon"><i class="ri-rocket-line"></i></span> My Startups</a></li>
-          <li><a href="pages/founders.html"><span class="nav-icon"><i class="ri-team-line"></i></span> Founders</a></li>
-          <li><a href="pages/funding.html"><span class="nav-icon"><i class="ri-money-dollar-circle-line"></i></span> Funding</a></li>
-          <li><a href="pages/captable.html"><span class="nav-icon"><i class="ri-pie-chart-line"></i></span> Cap Table</a></li>
-          <li><a href="pages/history.html"><span class="nav-icon"><i class="ri-time-line"></i></span> History</a></li>
+          <li>
+            <a href="#" class="active"
+              ><span class="nav-icon"><i class="ri-dashboard-line"></i></span>
+              Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="pages/startups.html"
+              ><span class="nav-icon"><i class="ri-rocket-line"></i></span> My
+              Startups</a
+            >
+          </li>
+          <li>
+            <a href="pages/startup_profile.html"
+              ><span class="nav-icon"><i class="ri-profile-line"></i></span>
+              Startup Profile</a
+            >
+          </li>
+          <li>
+            <a href="pages/founders.html"
+              ><span class="nav-icon"><i class="ri-team-line"></i></span>
+              Founders</a
+            >
+          </li>
+          <li>
+            <a href="pages/funding.html"
+              ><span class="nav-icon"
+                ><i class="ri-money-dollar-circle-line"></i
+              ></span>
+              Funding</a
+            >
+          </li>
+          <li>
+            <a href="pages/captable.html"
+              ><span class="nav-icon"><i class="ri-pie-chart-line"></i></span>
+              Cap Table</a
+            >
+          </li>
+          <li>
+            <a href="pages/history.html"
+              ><span class="nav-icon"><i class="ri-time-line"></i></span>
+              History</a
+            >
+          </li>
         </ul>
         <div class="sidebar-bottom">
-          <a href="welcome.html" onclick="localStorage.clear()"><i class="ri-logout-box-r-line"></i> Logout</a>
+          <a href="welcome.html" onclick="localStorage.clear()"
+            ><i class="ri-logout-box-r-line"></i> Logout</a
+          >
         </div>
       </nav>
 
       <div class="main-content">
         <div
           class="startup-toolbar dashboard-toolbar rounded-2xl p-4 mb-5 animate-fade-in-down"
-          style="background:linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.08));border:1px solid rgba(99,102,241,0.15);box-shadow:var(--shadow-sm);"
+          style="
+            background: linear-gradient(
+              135deg,
+              rgba(99, 102, 241, 0.08),
+              rgba(139, 92, 246, 0.08)
+            );
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            box-shadow: var(--shadow-sm);
+          "
         >
           <div class="dashboard-toolbar__identity">
             <div class="dashboard-toolbar__icon">S</div>
             <div class="dashboard-toolbar__copy">
               <p class="dashboard-toolbar__label">Currently Viewing</p>
-              <h2 id="startupNameDisplay" class="dashboard-toolbar__title">Loading...</h2>
+              <h2 id="startupNameDisplay" class="dashboard-toolbar__title">
+                Loading...
+              </h2>
             </div>
           </div>
           <div class="dashboard-toolbar__actions">
             <div class="dashboard-toolbar__select-wrap">
-              <select id="startupSwitcher" onchange="switchStartup(this.value)" class="dashboard-toolbar__select">
+              <select
+                id="startupSwitcher"
+                onchange="switchStartup(this.value)"
+                class="dashboard-toolbar__select"
+              >
                 <option value="">Switch Startup...</option>
               </select>
             </div>
@@ -62,110 +120,341 @@
           </div>
         </div>
 
-        <div class="flex justify-between items-center mb-6 animate-fade-in-down" style="animation-delay:0.1s;">
+        <div
+          class="flex justify-between items-center mb-6 animate-fade-in-down"
+          style="animation-delay: 0.1s"
+        >
           <div>
-            <div class="role-badge founder mb-2"><i class="ri-building-line"></i> Founder Panel</div>
-            <h1 class="text-2xl font-extrabold tracking-tight" style="color:var(--text-primary);">
-              Welcome back, <span style="background:var(--gradient-fresh);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Founder</span>
+            <div class="role-badge founder mb-2">
+              <i class="ri-building-line"></i> Founder Panel
+            </div>
+            <h1
+              class="text-2xl font-extrabold tracking-tight"
+              style="color: var(--text-primary)"
+            >
+              Welcome back,
+              <span
+                style="
+                  background: var(--gradient-fresh);
+                  -webkit-background-clip: text;
+                  -webkit-text-fill-color: transparent;
+                "
+                >Founder</span
+              >
             </h1>
-            <p class="text-sm mt-1" style="color:var(--text-muted);">Here's how your startup is performing today</p>
+            <p class="text-sm mt-1" style="color: var(--text-muted)">
+              Here's how your startup is performing today
+            </p>
           </div>
         </div>
 
-        <div class="stats-grid stats-grid--top grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
-          <div class="dashboard-stat-card relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-1" style="background:var(--bg-card);border:1px solid var(--border-glass);box-shadow:var(--shadow-sm);">
-            <div class="absolute top-0 left-0 w-full h-1 rounded-t-2xl" style="background:var(--gradient-blue);"></div>
+        <div
+          class="stats-grid stats-grid--top grid grid-cols-1 md:grid-cols-3 gap-5 mb-5"
+        >
+          <div
+            class="dashboard-stat-card relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-1"
+            style="
+              background: var(--bg-card);
+              border: 1px solid var(--border-glass);
+              box-shadow: var(--shadow-sm);
+            "
+          >
+            <div
+              class="absolute top-0 left-0 w-full h-1 rounded-t-2xl"
+              style="background: var(--gradient-blue)"
+            ></div>
             <div class="flex items-start justify-between">
               <div>
-                <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:var(--text-muted);">Total Funding</p>
-                <p id="funding" class="text-2xl font-extrabold tracking-tight" style="color:var(--accent-blue);">-</p>
+                <p
+                  class="text-xs font-semibold uppercase tracking-wider mb-2"
+                  style="color: var(--text-muted)"
+                >
+                  Total Funding
+                </p>
+                <p
+                  id="funding"
+                  class="text-2xl font-extrabold tracking-tight"
+                  style="color: var(--accent-blue)"
+                >
+                  -
+                </p>
               </div>
-              <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl" style="background:rgba(59,130,246,0.1);color:var(--accent-blue);"><i class="ri-money-rupee-circle-line"></i></div>
+              <div
+                class="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
+                style="
+                  background: rgba(59, 130, 246, 0.1);
+                  color: var(--accent-blue);
+                "
+              >
+                <i class="ri-money-rupee-circle-line"></i>
+              </div>
             </div>
             <div class="progress-track mt-3">
-              <div id="fundingBar" class="progress-fill" style="width:0%;background:var(--gradient-blue);"></div>
+              <div
+                id="fundingBar"
+                class="progress-fill"
+                style="width: 0%; background: var(--gradient-blue)"
+              ></div>
             </div>
-            <p id="fundingPercent" class="text-xs mt-2" style="color:var(--text-muted);">0% funded</p>
+            <p
+              id="fundingPercent"
+              class="text-xs mt-2"
+              style="color: var(--text-muted)"
+            >
+              0% funded
+            </p>
           </div>
 
-          <div class="dashboard-stat-card relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-2" style="background:var(--bg-card);border:1px solid var(--border-glass);box-shadow:var(--shadow-sm);">
-            <div class="absolute top-0 left-0 w-full h-1 rounded-t-2xl" style="background:var(--gradient-green);"></div>
+          <div
+            class="dashboard-stat-card relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-2"
+            style="
+              background: var(--bg-card);
+              border: 1px solid var(--border-glass);
+              box-shadow: var(--shadow-sm);
+            "
+          >
+            <div
+              class="absolute top-0 left-0 w-full h-1 rounded-t-2xl"
+              style="background: var(--gradient-green)"
+            ></div>
             <div class="flex items-start justify-between">
               <div>
-                <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:var(--text-muted);">Investors</p>
-                <p id="investors" class="text-2xl font-extrabold tracking-tight" style="color:var(--accent-green);">-</p>
+                <p
+                  class="text-xs font-semibold uppercase tracking-wider mb-2"
+                  style="color: var(--text-muted)"
+                >
+                  Investors
+                </p>
+                <p
+                  id="investors"
+                  class="text-2xl font-extrabold tracking-tight"
+                  style="color: var(--accent-green)"
+                >
+                  -
+                </p>
               </div>
-              <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl" style="background:rgba(16,185,129,0.1);color:var(--accent-green);"><i class="ri-user-community-line"></i></div>
+              <div
+                class="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
+                style="
+                  background: rgba(16, 185, 129, 0.18);
+                  color: var(--accent-green);
+                "
+              >
+                <i class="ri-group-line"></i>
+              </div>
             </div>
-            <p class="text-xs mt-4" style="color:var(--text-muted);">Active investors in your startup</p>
+            <p class="text-xs mt-4" style="color: var(--text-muted)">
+              Active investors in your startup
+            </p>
           </div>
 
-          <div class="dashboard-stat-card relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-3" style="background:var(--bg-card);border:1px solid var(--border-glass);box-shadow:var(--shadow-sm);">
-            <div class="absolute top-0 left-0 w-full h-1 rounded-t-2xl" style="background:var(--gradient-purple);"></div>
+          <div
+            class="dashboard-stat-card relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-3"
+            style="
+              background: var(--bg-card);
+              border: 1px solid var(--border-glass);
+              box-shadow: var(--shadow-sm);
+            "
+          >
+            <div
+              class="absolute top-0 left-0 w-full h-1 rounded-t-2xl"
+              style="background: var(--gradient-purple)"
+            ></div>
             <div class="flex items-start justify-between">
               <div>
-                <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:var(--text-muted);">Founder Equity</p>
-                <p id="equity" class="text-2xl font-extrabold tracking-tight" style="color:var(--accent-purple);">-</p>
+                <p
+                  class="text-xs font-semibold uppercase tracking-wider mb-2"
+                  style="color: var(--text-muted)"
+                >
+                  Founder Equity
+                </p>
+                <p
+                  id="equity"
+                  class="text-2xl font-extrabold tracking-tight"
+                  style="color: var(--accent-purple)"
+                >
+                  -
+                </p>
               </div>
-              <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl" style="background:rgba(139,92,246,0.1);color:var(--accent-purple);"><i class="ri-pie-chart-2-line"></i></div>
+              <div
+                class="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
+                style="
+                  background: rgba(139, 92, 246, 0.1);
+                  color: var(--accent-purple);
+                "
+              >
+                <i class="ri-pie-chart-2-line"></i>
+              </div>
             </div>
-            <p class="text-xs mt-4" style="color:var(--text-muted);">Your current ownership stake</p>
+            <p class="text-xs mt-4" style="color: var(--text-muted)">
+              Your current ownership stake
+            </p>
           </div>
         </div>
 
-        <div class="stats-grid stats-grid--bottom grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div class="dashboard-stat-card relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-4" style="background:var(--bg-card);border:1px solid var(--border-glass);box-shadow:var(--shadow-sm);">
-            <div class="absolute top-0 left-0 w-full h-1 rounded-t-2xl" style="background:var(--gradient-teal);"></div>
+        <div
+          class="stats-grid stats-grid--bottom grid grid-cols-1 md:grid-cols-3 gap-5"
+        >
+          <div
+            class="dashboard-stat-card relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-4"
+            style="
+              background: var(--bg-card);
+              border: 1px solid var(--border-glass);
+              box-shadow: var(--shadow-sm);
+            "
+          >
+            <div
+              class="absolute top-0 left-0 w-full h-1 rounded-t-2xl"
+              style="background: var(--gradient-teal)"
+            ></div>
             <div class="flex items-start justify-between">
               <div>
-                <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:var(--text-muted);">Startup Stage</p>
-                <p id="stage" class="text-xl font-extrabold" style="color:var(--accent-teal);">-</p>
+                <p
+                  class="text-xs font-semibold uppercase tracking-wider mb-2"
+                  style="color: var(--text-muted)"
+                >
+                  Startup Stage
+                </p>
+                <p
+                  id="stage"
+                  class="text-xl font-extrabold"
+                  style="color: var(--accent-teal)"
+                >
+                  -
+                </p>
               </div>
-              <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl" style="background:rgba(13,148,136,0.1);color:var(--accent-teal);"><i class="ri-rocket-2-line"></i></div>
+              <div
+                class="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
+                style="
+                  background: rgba(13, 148, 136, 0.1);
+                  color: var(--accent-teal);
+                "
+              >
+                <i class="ri-rocket-2-line"></i>
+              </div>
             </div>
           </div>
 
-          <div class="dashboard-stat-card relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-5" style="background:var(--bg-card);border:1px solid var(--border-glass);box-shadow:var(--shadow-sm);">
-            <div class="absolute top-0 left-0 w-full h-1 rounded-t-2xl" style="background:var(--gradient-sunset);"></div>
+          <div
+            class="dashboard-stat-card relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-5"
+            style="
+              background: var(--bg-card);
+              border: 1px solid var(--border-glass);
+              box-shadow: var(--shadow-sm);
+            "
+          >
+            <div
+              class="absolute top-0 left-0 w-full h-1 rounded-t-2xl"
+              style="background: var(--gradient-sunset)"
+            ></div>
             <div class="flex items-start justify-between">
               <div>
-                <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:var(--text-muted);">Latest Round</p>
-                <p id="round" class="text-xl font-extrabold" style="color:var(--accent-orange);">-</p>
+                <p
+                  class="text-xs font-semibold uppercase tracking-wider mb-2"
+                  style="color: var(--text-muted)"
+                >
+                  Latest Round
+                </p>
+                <p
+                  id="round"
+                  class="text-xl font-extrabold"
+                  style="color: var(--accent-orange)"
+                >
+                  -
+                </p>
               </div>
-              <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl" style="background:rgba(249,115,22,0.1);color:var(--accent-orange);"><i class="ri-line-chart-line"></i></div>
+              <div
+                class="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
+                style="
+                  background: rgba(249, 115, 22, 0.1);
+                  color: var(--accent-orange);
+                "
+              >
+                <i class="ri-line-chart-line"></i>
+              </div>
             </div>
           </div>
 
-          <div class="dashboard-stat-card relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-6" style="background:var(--bg-card);border:1px solid var(--border-glass);box-shadow:var(--shadow-sm);">
-            <div class="absolute top-0 left-0 w-full h-1 rounded-t-2xl" style="background:var(--gradient-fresh);"></div>
+          <div
+            class="dashboard-stat-card relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-6"
+            style="
+              background: var(--bg-card);
+              border: 1px solid var(--border-glass);
+              box-shadow: var(--shadow-sm);
+            "
+          >
+            <div
+              class="absolute top-0 left-0 w-full h-1 rounded-t-2xl"
+              style="background: var(--gradient-fresh)"
+            ></div>
             <div class="flex items-start justify-between">
               <div>
-                <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:var(--text-muted);">Valuation</p>
-                <p id="valuation" class="text-xl font-extrabold" style="color:var(--accent-indigo);">-</p>
+                <p
+                  class="text-xs font-semibold uppercase tracking-wider mb-2"
+                  style="color: var(--text-muted)"
+                >
+                  Valuation
+                </p>
+                <p
+                  id="valuation"
+                  class="text-xl font-extrabold"
+                  style="color: var(--accent-indigo)"
+                >
+                  -
+                </p>
               </div>
-              <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl" style="background:rgba(99,102,241,0.1);color:var(--accent-indigo);"><i class="ri-medal-line"></i></div>
+              <div
+                class="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
+                style="
+                  background: rgba(99, 102, 241, 0.1);
+                  color: var(--accent-indigo);
+                "
+              >
+                <i class="ri-medal-line"></i>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="mt-6 animate-fade-in-up delay-6">
-          <h2 class="text-sm font-bold uppercase tracking-wider mb-3" style="color:var(--text-muted);">Quick Actions</h2>
+          <h2
+            class="text-sm font-bold uppercase tracking-wider mb-3"
+            style="color: var(--text-muted)"
+          >
+            Quick Actions
+          </h2>
           <div class="quick-actions-row flex gap-3 flex-wrap">
-            <a href="pages/startups.html" class="btn btn-primary btn-sm" style="text-decoration:none;"><i class="ri-rocket-line"></i> Manage Startups</a>
-            <a href="pages/funding.html" class="btn btn-purple btn-sm" style="text-decoration:none;"><i class="ri-bank-card-line"></i> Add Funding</a>
-            <a href="pages/captable.html" class="btn btn-green btn-sm" style="text-decoration:none;"><i class="ri-pie-chart-line"></i> View Cap Table</a>
+            <a
+              href="pages/startups.html"
+              class="btn btn-primary btn-sm"
+              style="text-decoration: none"
+              ><i class="ri-rocket-line"></i> Manage Startups</a
+            >
+            <a
+              href="pages/funding.html"
+              class="btn btn-purple btn-sm"
+              style="text-decoration: none"
+              ><i class="ri-bank-card-line"></i> Add Funding</a
+            >
+            <a
+              href="pages/captable.html"
+              class="btn btn-green btn-sm"
+              style="text-decoration: none"
+              ><i class="ri-pie-chart-line"></i> View Cap Table</a
+            >
           </div>
         </div>
       </div>
     </div>
 
     <script>
-      document.getElementById("dateDisplay").textContent = new Date().toLocaleDateString("en-IN", {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      });
+      document.getElementById("dateDisplay").textContent =
+        new Date().toLocaleDateString("en-IN", {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
 
       window.onload = function () {
         const user_id = localStorage.getItem("user_id");
@@ -178,7 +467,8 @@
         loadStartupSwitcher(user_id, startup_id);
 
         if (!startup_id) {
-          document.getElementById("startupNameDisplay").textContent = "Select a startup";
+          document.getElementById("startupNameDisplay").textContent =
+            "Select a startup";
           return;
         }
 
@@ -216,10 +506,14 @@
         try {
           const switcher = document.getElementById("startupSwitcher");
           const selectedOption = switcher.options[switcher.selectedIndex];
-          const startupName = selectedOption.textContent.replace(/\s+\(.+\)$/, "");
+          const startupName = selectedOption.textContent.replace(
+            /\s+\(.+\)$/,
+            "",
+          );
           localStorage.setItem("startup_id", val);
           localStorage.setItem("startup_name", startupName);
-          document.getElementById("startupNameDisplay").textContent = startupName;
+          document.getElementById("startupNameDisplay").textContent =
+            startupName;
           loadDashboard(val);
           loadStartupSwitcher(localStorage.getItem("user_id"), val);
         } catch (e) {
@@ -237,7 +531,9 @@
       async function loadDashboard(startup_id) {
         if (!startup_id) startup_id = localStorage.getItem("startup_id");
         try {
-          const res = await fetch(`http://localhost:5000/startupDashboard/${startup_id}`);
+          const res = await fetch(
+            `http://localhost:5000/startupDashboard/${startup_id}`,
+          );
           if (!res.ok) {
             const errorText = await res.text();
             throw new Error(`Server error: ${res.status} ${errorText}`);
@@ -246,45 +542,72 @@
           if (!data) return;
 
           if (data.startup_name) {
-            document.getElementById("startupNameDisplay").textContent = data.startup_name;
+            document.getElementById("startupNameDisplay").textContent =
+              data.startup_name;
             localStorage.setItem("startup_name", data.startup_name);
           }
 
           const raised = Number(data.total_funding ?? 0);
           const target = Number(data.target_funding ?? 0);
-          document.getElementById("funding").innerText = `${formatCurrency(raised)} / ${formatCurrency(target)}`;
+          document.getElementById("funding").innerText =
+            `${formatCurrency(raised)} / ${formatCurrency(target)}`;
           const percent = target > 0 ? (raised / target) * 100 : 0;
-          document.getElementById("fundingPercent").innerText = percent.toFixed(1) + "% funded";
-          document.getElementById("fundingBar").style.width = Math.min(percent, 100) + "%";
-          document.getElementById("investors").innerText = data.total_investors ?? 0;
-          document.getElementById("equity").innerText = data.founder_equity != null ? Number(data.founder_equity).toFixed(2) + "%" : "-";
-          document.getElementById("stage").innerText = data.stage != null ? data.stage : "-";
-          document.getElementById("round").innerText = data.latest_round != null ? data.latest_round : "-";
-          document.getElementById("valuation").innerText = data.valuation != null && data.valuation > 0 ? formatCurrency(data.valuation) : "-";
+          document.getElementById("fundingPercent").innerText =
+            percent.toFixed(1) + "% funded";
+          document.getElementById("fundingBar").style.width =
+            Math.min(percent, 100) + "%";
+          document.getElementById("investors").innerText =
+            data.total_investors ?? 0;
+          document.getElementById("equity").innerText =
+            data.founder_equity != null
+              ? Number(data.founder_equity).toFixed(2) + "%"
+              : "-";
+          document.getElementById("stage").innerText =
+            data.stage != null ? data.stage : "-";
+          document.getElementById("round").innerText =
+            data.latest_round != null ? data.latest_round : "-";
+          document.getElementById("valuation").innerText =
+            data.valuation != null && data.valuation > 0
+              ? formatCurrency(data.valuation)
+              : "-";
         } catch (err) {
           console.error("Error:", err);
-          alert("Failed to load dashboard: " + err.message);
+          showToast("Failed to load dashboard: " + err.message, "error");
         }
       }
     </script>
-  <script>
-(function() {
-  var name = localStorage.getItem("username") || "User";
-  var role = localStorage.getItem("role") || "Member";
-  var initials = name.split(" ").map(function(w){return w[0]||"";}).join("").slice(0,2).toUpperCase();
-  var brand = document.querySelector(".sidebar-brand");
-  if (brand) {
-    var chip = document.createElement("div");
-    chip.className = "sidebar-user-chip";
-    chip.innerHTML = "<div class=\"sidebar-user-avatar\">" + initials + "</div><div class=\"sidebar-user-info\"><div class=\"sidebar-user-name\">" + name + "</div><div class=\"sidebar-user-role\">" + role + "</div></div>";
-    var title = brand.querySelector(".sidebar-title");
-    if (title && title.nextSibling) {
-      brand.insertBefore(chip, title.nextSibling);
-    } else {
-      brand.appendChild(chip);
-    }
-  }
-})();
-</script>
-</body>
+    <script>
+      (function () {
+        var name = localStorage.getItem("username") || "User";
+        var role = localStorage.getItem("role") || "Member";
+        var initials = name
+          .split(" ")
+          .map(function (w) {
+            return w[0] || "";
+          })
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        var brand = document.querySelector(".sidebar-brand");
+        if (brand) {
+          var chip = document.createElement("div");
+          chip.className = "sidebar-user-chip";
+          chip.innerHTML =
+            '<div class="sidebar-user-avatar">' +
+            initials +
+            '</div><div class="sidebar-user-info"><div class="sidebar-user-name">' +
+            name +
+            '</div><div class="sidebar-user-role">' +
+            role +
+            "</div></div>";
+          var title = brand.querySelector(".sidebar-title");
+          if (title && title.nextSibling) {
+            brand.insertBefore(chip, title.nextSibling);
+          } else {
+            brand.appendChild(chip);
+          }
+        }
+      })();
+    </script>
+  </body>
 </html>

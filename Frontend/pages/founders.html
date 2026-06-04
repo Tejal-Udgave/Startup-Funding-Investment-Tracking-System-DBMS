@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../styles.css" />
     <script src="../theme.js"></script>
+    <script src="../toast.js"></script>
   </head>
   <body>
     <div class="orb orb-1"></div>
@@ -35,6 +36,12 @@
             <a href="startups.html"
               ><span class="nav-icon"><i class="ri-rocket-line"></i></span> My
               Startups</a
+            >
+          </li>
+          <li>
+            <a href="startup_profile.html"
+              ><span class="nav-icon"><i class="ri-profile-line"></i></span>
+              Startup Profile</a
             >
           </li>
           <li>
@@ -72,9 +79,7 @@
       </nav>
 
       <div class="main-content">
-        <div
-          class="workspace-header-card animate-fade-in-down"
-        >
+        <div class="workspace-header-card animate-fade-in-down">
           <div>
             <div class="role-badge founder mb-2">
               <i class="ri-building-line"></i> Founder Panel
@@ -90,7 +95,9 @@
             </p>
           </div>
           <div class="workspace-header-meta">
-            <div class="workspace-header-icon"><i class="ri-team-line"></i></div>
+            <div class="workspace-header-icon">
+              <i class="ri-team-line"></i>
+            </div>
             <div class="workspace-header-copy">
               <span>Workspace Focus</span>
               <strong>Founder Records</strong>
@@ -200,6 +207,7 @@
                   <th>Role</th>
                   <th>Startup</th>
                   <th>Equity (%)</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody id="founderTable"></tbody>
@@ -215,11 +223,11 @@
       function isValidEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
       }
-
+      let editingFounderId = null;
       window.onload = async function () {
         const user_id = localStorage.getItem("user_id");
         if (!user_id) {
-          alert("Please login first");
+          showToast("Please login first", "warning");
           window.location.href = "../login.html";
           return;
         }
@@ -263,49 +271,101 @@
         const equity = document.getElementById("equity").value;
         const startup_id = document.getElementById("startup_id").value;
         if (!name) {
-          alert("Enter name");
+          showToast("Enter name", "warning");
           return;
         }
         if (!isValidEmail(email)) {
-          alert("Enter valid email");
+          showToast("Enter valid email", "warning");
           return;
         }
         if (!startup_id) {
-          alert("Select startup");
+          showToast("Select startup", "warning");
           return;
         }
         const equityValue = Number(equity);
         if (isNaN(equityValue) || equityValue <= 0) {
-          alert("Equity must be positive");
+          showToast("Equity must be positive", "warning");
           return;
         }
-        const existingEquity = foundersData
-          .filter((f) => f.startup_id === startup_id)
-          .reduce((sum, f) => sum + Number(f.initial_equity || 0), 0);
-        if (existingEquity + equityValue > 100) {
-          alert("Total equity cannot exceed 100%");
-          return;
+        if (!editingFounderId) {
+          const equityValue = Number(equity);
+
+          if (isNaN(equityValue) || equityValue <= 0) {
+            showToast("Equity must be positive", "warning");
+            return;
+          }
+          const existingEquity = foundersData
+            .filter((f) => f.startup_id === startup_id)
+            .reduce((sum, f) => sum + Number(f.initial_equity || 0), 0);
+          if (existingEquity + equityValue > 100) {
+            showToast("Total equity cannot exceed 100%", "warning");
+            return;
+          }
         }
         try {
-          const res = await fetch(`${API_BASE}/addFounder`, {
+          /*const res = await fetch(`${API_BASE}/addFounder`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               startup_id,
               founders: [{ name, email, role, equity }],
             }),
-          });
+          });*/
+          let res;
+
+          if (editingFounderId) {
+            res = await fetch(`${API_BASE}/updateFounder/${editingFounderId}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                founder_name: name,
+                founder_email: email,
+                founder_role: role,
+              }),
+            });
+          } else {
+            res = await fetch(`${API_BASE}/addFounder`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                startup_id,
+                founders: [{ name, email, role, equity }],
+              }),
+            });
+          }
           if (!res.ok) {
-            alert(await res.text());
+            showToast(await res.text(), "error");
             return;
           }
-          alert("Founder added ✅");
+          /*showToast("Founder added ✅", "success");
           const current = localStorage.getItem("startup_id");
           document.getElementById("founderForm").reset();
           if (current) document.getElementById("startup_id").value = current;
+          await loadFounders();*/
+          const isUpdate = !!editingFounderId;
+
+          editingFounderId = null;
+
+          showToast(
+            isUpdate ? "Founder updated ✅" : "Founder added ✅",
+            "success",
+          );
+
+          const current = localStorage.getItem("startup_id");
+
+          document.getElementById("founderForm").reset();
+
+          document.getElementById("equity").readOnly = false;
+          document.getElementById("startup_id").disabled = false;
+
+          document.querySelector("#founderForm button").innerHTML =
+            '<i class="ri-team-line"></i> Add Co-Founder';
+
+          if (current) document.getElementById("startup_id").value = current;
+
           await loadFounders();
         } catch (err) {
-          alert("Backend error");
+          showToast("Backend error", "error");
         }
       }
 
@@ -315,39 +375,104 @@
           const res = await fetch(`${API_BASE}/founders/${user_id}`);
           if (!res.ok) throw new Error();
           const data = await res.json();
-          foundersData = data;
+          // chnged
+          const startup_id = localStorage.getItem("startup_id");
+
+          const filtered = data.filter((f) => f.startup_id === startup_id);
+
+          foundersData = filtered;
+          //till here
+          // foundersData = data;
+          window.currentFounders = filtered; // editing
           const table = document.getElementById("founderTable");
           table.innerHTML = "";
-          if (data.length === 0) {
-            table.innerHTML = `<tr><td colspan="4" class="text-center py-8" style="color:var(--text-muted);">No founders yet</td></tr>`;
+          // data.length -> filtered.length
+          if (filtered.length === 0) {
+            table.innerHTML = `<tr><td colspan="5" class="text-center py-8" style="color:var(--text-muted);">No founders yet</td></tr>`;
             return;
           }
-          data.forEach((f) => {
+          // data.foreach --> filtered.foreach
+          /*filtered.forEach((f) => {
             table.innerHTML += `<tr><td class="font-semibold" style="color:var(--text-primary);">${f.founder_name}</td><td>${f.founder_role || "-"}</td><td><span class="badge badge-blue">${f.startup_name}</span></td><td><span class="font-bold" style="color:var(--accent-purple);">${f.initial_equity}%</span></td></tr>`;
+          });*/
+          filtered.forEach((f) => {
+            table.innerHTML += `<tr>
+            <td class="font-semibold" style="color:var(--text-primary);">${f.founder_name}</td>
+            <td>${f.founder_role || "-"}</td>
+            <td><span class="badge badge-blue">${f.startup_name}</span></td>
+            <td><span class="font-bold" style="color:var(--accent-purple);">${f.initial_equity}%</span></td>
+
+            <td>
+              <button
+                onclick="editFounder('${f.founder_id}')"
+                class="btn btn-primary btn-sm"
+              >
+                Edit
+              </button>
+            </td>
+          </tr>`;
           });
         } catch (err) {
           console.error("Failed:", err);
         }
       }
+
+      function editFounder(founder_id) {
+        const founder = window.currentFounders.find(
+          (f) => f.founder_id === founder_id,
+        );
+
+        if (!founder) return;
+
+        document.getElementById("name").value = founder.founder_name;
+
+        document.getElementById("email").value = founder.founder_email || "";
+
+        document.getElementById("role").value = founder.founder_role || "";
+
+        document.getElementById("equity").value = founder.initial_equity;
+
+        document.getElementById("equity").readOnly = true;
+
+        document.getElementById("startup_id").disabled = true;
+        editingFounderId = founder_id;
+
+        document.querySelector("#founderForm button").innerHTML =
+          '<i class="ri-edit-line"></i> Update Founder';
+      }
     </script>
-  <script>
-(function() {
-  var name = localStorage.getItem("username") || "User";
-  var role = localStorage.getItem("role") || "Member";
-  var initials = name.split(" ").map(function(w){return w[0]||"";}).join("").slice(0,2).toUpperCase();
-  var brand = document.querySelector(".sidebar-brand");
-  if (brand) {
-    var chip = document.createElement("div");
-    chip.className = "sidebar-user-chip";
-    chip.innerHTML = "<div class=\"sidebar-user-avatar\">" + initials + "</div><div class=\"sidebar-user-info\"><div class=\"sidebar-user-name\">" + name + "</div><div class=\"sidebar-user-role\">" + role + "</div></div>";
-    var title = brand.querySelector(".sidebar-title");
-    if (title && title.nextSibling) {
-      brand.insertBefore(chip, title.nextSibling);
-    } else {
-      brand.appendChild(chip);
-    }
-  }
-})();
-</script>
-</body>
+    <script>
+      (function () {
+        var name = localStorage.getItem("username") || "User";
+        var role = localStorage.getItem("role") || "Member";
+        var initials = name
+          .split(" ")
+          .map(function (w) {
+            return w[0] || "";
+          })
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        var brand = document.querySelector(".sidebar-brand");
+        if (brand) {
+          var chip = document.createElement("div");
+          chip.className = "sidebar-user-chip";
+          chip.innerHTML =
+            '<div class="sidebar-user-avatar">' +
+            initials +
+            '</div><div class="sidebar-user-info"><div class="sidebar-user-name">' +
+            name +
+            '</div><div class="sidebar-user-role">' +
+            role +
+            "</div></div>";
+          var title = brand.querySelector(".sidebar-title");
+          if (title && title.nextSibling) {
+            brand.insertBefore(chip, title.nextSibling);
+          } else {
+            brand.appendChild(chip);
+          }
+        }
+      })();
+    </script>
+  </body>
 </html>
