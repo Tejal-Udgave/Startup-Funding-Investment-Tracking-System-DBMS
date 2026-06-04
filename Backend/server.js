@@ -51,29 +51,28 @@ db.connect((err) => {
       },
     );
   }
-
   ensureColumn(
-    "FOUNDER",
+    "founder",
     "founder_email",
-    "ALTER TABLE FOUNDER ADD COLUMN founder_email VARCHAR(100) NULL",
+    "ALTER TABLE founder ADD COLUMN founder_email VARCHAR(100) NULL",
   );
 
   ensureColumn(
-    "FOUNDER",
+    "founder",
     "user_id",
-    "ALTER TABLE FOUNDER ADD COLUMN user_id INT NULL",
+    "ALTER TABLE founder ADD COLUMN user_id INT NULL",
   );
 
   ensureColumn(
-    "INVESTOR",
+    "investor",
     "user_id",
-    "ALTER TABLE INVESTOR ADD COLUMN user_id INT NULL",
+    "ALTER TABLE investor ADD COLUMN user_id INT NULL",
   );
 
   ensureColumn(
-    "STARTUP",
+    "startup",
     "user_id",
-    "ALTER TABLE STARTUP ADD COLUMN user_id INT NULL",
+    "ALTER TABLE startup ADD COLUMN user_id INT NULL",
   );
   console.log("Checkpoint B");
   function ensureStartupProfileTable() {
@@ -107,7 +106,7 @@ db.connect((err) => {
              future_roadmap TEXT,
              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
              UNIQUE KEY ux_startup_profile_startup_id (startup_id),
-             FOREIGN KEY (startup_id) REFERENCES STARTUP(startup_id) ON DELETE CASCADE
+             FOREIGN KEY (startup_id) REFERENCES startup(startup_id) ON DELETE CASCADE
            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`,
           (createErr) => {
             if (createErr) {
