@@ -11,10 +11,10 @@ app.use(express.json());
 
 // ================= DB =================
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "root123",
-  database: "SFITS_DBMS_PRJ",
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "root123",
+  database: process.env.DB_NAME || "SFITS_DBMS_PRJ",
 });
 
 db.connect((err) => {
@@ -1677,10 +1677,13 @@ db.connect((err) => {
     );
   });
 
+  const PORT = process.env.PORT || 5000;
+
   // ================= SERVER =================
   console.log("Reached end of routes");
-  app.listen(5000, () => {
-    console.log("Server running on http://localhost:5000");
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
     console.log("Backend file:", __filename);
     console.log("Working directory:", process.cwd());
   });
