@@ -269,7 +269,7 @@
         let investor_id = localStorage.getItem("investor_id");
         if (!investor_id && user_id) {
           const res = await fetch(
-            `http://localhost:5000/getInvestor/${user_id}`,
+            `https://startup-funding-investment-tracking.onrender.com/getInvestor/${user_id}`,
           );
           const data = await res.json();
           if (data.investor_id)
@@ -306,8 +306,12 @@
         try {
           // Fetch startups + latest round info via allRounds
           const [startupRes, roundRes] = await Promise.all([
-            fetch("http://localhost:5000/allStartups"),
-            fetch("http://localhost:5000/allRounds"),
+            fetch(
+              "https://startup-funding-investment-tracking.onrender.com/allStartups",
+            ),
+            fetch(
+              "https://startup-funding-investment-tracking.onrender.com/allRounds",
+            ),
           ]);
           allStartups = await startupRes.json();
           const rounds = await roundRes.json();

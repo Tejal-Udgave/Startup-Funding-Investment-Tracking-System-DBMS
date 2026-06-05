@@ -418,7 +418,7 @@
         let investor_id = localStorage.getItem("investor_id");
         if (!investor_id && user_id) {
           const res = await fetch(
-            `http://localhost:5000/getInvestor/${user_id}`,
+            `https://startup-funding-investment-tracking.onrender.com/getInvestor/${user_id}`,
           );
           const data = await res.json();
           if (data.investor_id)
@@ -452,7 +452,9 @@
           "selected_invest_startup_name",
         );
 
-        const res = await fetch("http://localhost:5000/allRounds");
+        const res = await fetch(
+          "https://startup-funding-investment-tracking.onrender.com/allRounds",
+        );
         allRoundsData = await res.json();
 
         const dropdown = document.getElementById("round");
@@ -612,19 +614,22 @@
           const country = document.getElementById("country").value;
 
           try {
-            const res = await fetch("http://localhost:5000/addInvestment", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                round_id,
-                user_id,
-                username,
-                firm_name,
-                country,
-                amount,
-                equity,
-              }),
-            });
+            const res = await fetch(
+              "https://startup-funding-investment-tracking.onrender.com/addInvestment",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  round_id,
+                  user_id,
+                  username,
+                  firm_name,
+                  country,
+                  amount,
+                  equity,
+                }),
+              },
+            );
             const data = await res.json();
             if (res.ok) {
               localStorage.removeItem("selected_invest_startup_id");
@@ -652,7 +657,7 @@
         receiptControls.style.display = "block";
         downloadBtn.onclick = () => {
           window.open(
-            `http://localhost:5000/investmentReceipt/${investmentId}`,
+            `https://startup-funding-investment-tracking.onrender.com/investmentReceipt/${investmentId}`,
             "_blank",
           );
         };

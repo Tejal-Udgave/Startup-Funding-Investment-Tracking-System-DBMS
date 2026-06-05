@@ -367,7 +367,9 @@
 
       async function loadStartups() {
         try {
-          const res = await fetch(`http://localhost:5000/startups/${user_id}`);
+          const res = await fetch(
+            `https://startup-funding-investment-tracking.onrender.com/startups/${user_id}`,
+          );
           const startups = await res.json();
 
           if (!Array.isArray(startups) || startups.length === 0) {
@@ -431,7 +433,7 @@
 
         try {
           const res = await fetch(
-            `http://localhost:5000/startupProfile/${startup_id}`,
+            `https://startup-funding-investment-tracking.onrender.com/startupProfile/${startup_id}`,
           );
           const profile = await res.json();
           const exists = profile && Object.keys(profile).length > 0;
@@ -570,11 +572,14 @@
           };
 
           try {
-            const res = await fetch("http://localhost:5000/addStartupProfile", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload),
-            });
+            const res = await fetch(
+              "https://startup-funding-investment-tracking.onrender.com/addStartupProfile",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+              },
+            );
             const data = await res.json();
             if (res.ok) {
               startupStatus("Profile saved successfully.");

@@ -482,7 +482,9 @@
 
       async function loadStartupSwitcher(user_id, currentStartupId) {
         try {
-          const res = await fetch(`http://localhost:5000/startups/${user_id}`);
+          const res = await fetch(
+            `https://startup-funding-investment-tracking.onrender.com/startups/${user_id}`,
+          );
           if (!res.ok) return;
           const startups = await res.json();
           const switcher = document.getElementById("startupSwitcher");
@@ -532,7 +534,7 @@
         if (!startup_id) startup_id = localStorage.getItem("startup_id");
         try {
           const res = await fetch(
-            `http://localhost:5000/startupDashboard/${startup_id}`,
+            `https://startup-funding-investment-tracking.onrender.com/startupDashboard/${startup_id}`,
           );
           if (!res.ok) {
             const errorText = await res.text();

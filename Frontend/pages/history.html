@@ -203,7 +203,9 @@
       async function loadStartups() {
         const user_id = localStorage.getItem("user_id");
         const savedStartupId = localStorage.getItem("startup_id");
-        const res = await fetch(`http://localhost:5000/startups/${user_id}`);
+        const res = await fetch(
+          `https://startup-funding-investment-tracking.onrender.com/startups/${user_id}`,
+        );
         const data = await res.json();
         const dropdown = document.getElementById("startup_id");
 
@@ -242,7 +244,7 @@
         let data = [];
         try {
           const res = await fetch(
-            `http://localhost:5000/history/${startup_id}`,
+            `https://startup-funding-investment-tracking.onrender.com/history/${startup_id}`,
           );
           if (!res.ok) {
             table.innerHTML = `<tr><td colspan="4" class="text-center py-8" style="color:var(--text-muted);">Unable to load history data</td></tr>`;

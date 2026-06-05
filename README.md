@@ -50,7 +50,7 @@ npm install express mysql2 cors
 
 ```bash
 node server.js
-# → Server running on http://localhost:5000
+# → Server running on https://startup-funding-investment-tracking.onrender.com
 ```
 
 ### 5. Open the frontend

@@ -16,28 +16,76 @@
       <nav class="sidebar investor">
         <div class="sidebar-brand">
           <div class="sidebar-title">SFITS</div>
-          <div class="sidebar-subtitle"><i class="ri-sparkling-2-line"></i> Workspace</div>
+          <div class="sidebar-subtitle">
+            <i class="ri-sparkling-2-line"></i> Workspace
+          </div>
           <div class="sidebar-role-chip">
             <i class="ri-line-chart-line"></i>
             <span>Investor Panel</span>
           </div>
-          <p class="sidebar-role-note">Track portfolio performance, browse opportunities, and invest with more clarity.</p>
+          <p class="sidebar-role-note">
+            Track portfolio performance, browse opportunities, and invest with
+            more clarity.
+          </p>
         </div>
         <ul class="sidebar-nav">
-          <li><a href="investor_dashboard.html" class="active"><span class="nav-icon"><i class="ri-dashboard-line"></i></span> Dashboard</a></li>
-          <li><a href="investor_pages/browse_startups.html"><span class="nav-icon"><i class="ri-search-line"></i></span> Browse Startups</a></li>
-          <li><a href="investor_pages/invest.html"><span class="nav-icon"><i class="ri-coins-line"></i></span> Invest</a></li>
-          <li><a href="investor_pages/my_investments.html"><span class="nav-icon"><i class="ri-bar-chart-box-line"></i></span> My Investments</a></li>
+          <li>
+            <a href="investor_dashboard.html" class="active"
+              ><span class="nav-icon"><i class="ri-dashboard-line"></i></span>
+              Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="investor_pages/browse_startups.html"
+              ><span class="nav-icon"><i class="ri-search-line"></i></span>
+              Browse Startups</a
+            >
+          </li>
+          <li>
+            <a href="investor_pages/invest.html"
+              ><span class="nav-icon"><i class="ri-coins-line"></i></span>
+              Invest</a
+            >
+          </li>
+          <li>
+            <a href="investor_pages/my_investments.html"
+              ><span class="nav-icon"
+                ><i class="ri-bar-chart-box-line"></i
+              ></span>
+              My Investments</a
+            >
+          </li>
         </ul>
-        <div class="sidebar-bottom"><a href="welcome.html" onclick="localStorage.clear()"><i class="ri-logout-box-r-line"></i> Logout</a></div>
+        <div class="sidebar-bottom">
+          <a href="welcome.html" onclick="localStorage.clear()"
+            ><i class="ri-logout-box-r-line"></i> Logout</a
+          >
+        </div>
       </nav>
 
       <div class="main-content">
         <div class="workspace-header-card animate-fade-in-down">
           <div>
-            <div class="role-badge investor mb-2"><i class="ri-line-chart-line"></i> Investor Panel</div>
-            <h1 class="text-2xl font-extrabold tracking-tight" style="color:var(--text-primary);">Welcome, <span style="background:var(--gradient-green);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Investor</span></h1>
-            <p class="text-sm mt-1" style="color:var(--text-muted);">Your portfolio at a glance</p>
+            <div class="role-badge investor mb-2">
+              <i class="ri-line-chart-line"></i> Investor Panel
+            </div>
+            <h1
+              class="text-2xl font-extrabold tracking-tight"
+              style="color: var(--text-primary)"
+            >
+              Welcome,
+              <span
+                style="
+                  background: var(--gradient-green);
+                  -webkit-background-clip: text;
+                  -webkit-text-fill-color: transparent;
+                "
+                >Investor</span
+              >
+            </h1>
+            <p class="text-sm mt-1" style="color: var(--text-muted)">
+              Your portfolio at a glance
+            </p>
           </div>
           <div class="info-chip">
             <i class="ri-calendar-event-line"></i><span id="dateDisplay"></span>
@@ -45,62 +93,187 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-          <div class="relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-1" style="background:var(--bg-card);border:1px solid var(--border-glass);box-shadow:var(--shadow-sm);">
-            <div class="absolute top-0 left-0 w-full h-1" style="background:var(--gradient-green);"></div>
+          <div
+            class="relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-1"
+            style="
+              background: var(--bg-card);
+              border: 1px solid var(--border-glass);
+              box-shadow: var(--shadow-sm);
+            "
+          >
+            <div
+              class="absolute top-0 left-0 w-full h-1"
+              style="background: var(--gradient-green)"
+            ></div>
             <div class="flex items-start justify-between">
               <div>
-                <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:var(--text-muted);">Total Investments</p>
-                <p id="totalInvested" class="text-2xl font-extrabold" style="color:var(--accent-green);">₹0</p>
+                <p
+                  class="text-xs font-semibold uppercase tracking-wider mb-2"
+                  style="color: var(--text-muted)"
+                >
+                  Total Investments
+                </p>
+                <p
+                  id="totalInvested"
+                  class="text-2xl font-extrabold"
+                  style="color: var(--accent-green)"
+                >
+                  ₹0
+                </p>
               </div>
-              <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl" style="background:rgba(16,185,129,0.1);color:var(--accent-green);"><i class="ri-money-rupee-circle-line"></i></div>
+              <div
+                class="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
+                style="
+                  background: rgba(16, 185, 129, 0.1);
+                  color: var(--accent-green);
+                "
+              >
+                <i class="ri-money-rupee-circle-line"></i>
+              </div>
             </div>
           </div>
 
-          <div class="relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-2" style="background:var(--bg-card);border:1px solid var(--border-glass);box-shadow:var(--shadow-sm);">
-            <div class="absolute top-0 left-0 w-full h-1" style="background:var(--gradient-blue);"></div>
+          <div
+            class="relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-2"
+            style="
+              background: var(--bg-card);
+              border: 1px solid var(--border-glass);
+              box-shadow: var(--shadow-sm);
+            "
+          >
+            <div
+              class="absolute top-0 left-0 w-full h-1"
+              style="background: var(--gradient-blue)"
+            ></div>
             <div class="flex items-start justify-between">
               <div>
-                <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:var(--text-muted);">Portfolio</p>
-                <p id="totalStartups" class="text-2xl font-extrabold" style="color:var(--accent-blue);">0</p>
+                <p
+                  class="text-xs font-semibold uppercase tracking-wider mb-2"
+                  style="color: var(--text-muted)"
+                >
+                  Portfolio
+                </p>
+                <p
+                  id="totalStartups"
+                  class="text-2xl font-extrabold"
+                  style="color: var(--accent-blue)"
+                >
+                  0
+                </p>
               </div>
-              <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl" style="background:rgba(59,130,246,0.1);color:var(--accent-blue);"><i class="ri-building-4-line"></i></div>
+              <div
+                class="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
+                style="
+                  background: rgba(59, 130, 246, 0.1);
+                  color: var(--accent-blue);
+                "
+              >
+                <i class="ri-building-4-line"></i>
+              </div>
             </div>
           </div>
 
-          <div class="relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-3" style="background:var(--bg-card);border:1px solid var(--border-glass);box-shadow:var(--shadow-sm);">
-            <div class="absolute top-0 left-0 w-full h-1" style="background:var(--gradient-purple);"></div>
+          <div
+            class="relative overflow-hidden rounded-2xl p-5 animate-fade-in-up delay-3"
+            style="
+              background: var(--bg-card);
+              border: 1px solid var(--border-glass);
+              box-shadow: var(--shadow-sm);
+            "
+          >
+            <div
+              class="absolute top-0 left-0 w-full h-1"
+              style="background: var(--gradient-purple)"
+            ></div>
             <div class="flex items-start justify-between">
               <div>
-                <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:var(--text-muted);">Total Equity</p>
-                <p id="totalEquity" class="text-2xl font-extrabold" style="color:var(--accent-purple);">0%</p>
+                <p
+                  class="text-xs font-semibold uppercase tracking-wider mb-2"
+                  style="color: var(--text-muted)"
+                >
+                  Total Equity
+                </p>
+                <p
+                  id="totalEquity"
+                  class="text-2xl font-extrabold"
+                  style="color: var(--accent-purple)"
+                >
+                  0%
+                </p>
               </div>
-              <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl" style="background:rgba(139,92,246,0.1);color:var(--accent-purple);"><i class="ri-pie-chart-2-line"></i></div>
+              <div
+                class="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
+                style="
+                  background: rgba(139, 92, 246, 0.1);
+                  color: var(--accent-purple);
+                "
+              >
+                <i class="ri-pie-chart-2-line"></i>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <div class="lg:col-span-2 panel-card rounded-2xl p-6 animate-fade-in-up delay-4" style="background:var(--bg-card);border:1px solid var(--border-glass);box-shadow:var(--shadow-sm);">
-            <h2 class="text-sm font-bold uppercase tracking-wider mb-4 inline-flex items-center gap-2" style="color:var(--text-muted);"><i class="ri-donut-chart-line"></i> Investment Distribution</h2>
-            <div style="max-width:420px;height:280px;margin:0 auto;">
+          <div
+            class="lg:col-span-2 panel-card rounded-2xl p-6 animate-fade-in-up delay-4"
+            style="
+              background: var(--bg-card);
+              border: 1px solid var(--border-glass);
+              box-shadow: var(--shadow-sm);
+            "
+          >
+            <h2
+              class="text-sm font-bold uppercase tracking-wider mb-4 inline-flex items-center gap-2"
+              style="color: var(--text-muted)"
+            >
+              <i class="ri-donut-chart-line"></i> Investment Distribution
+            </h2>
+            <div style="max-width: 420px; height: 280px; margin: 0 auto">
               <canvas id="investmentChart"></canvas>
             </div>
           </div>
 
-          <div class="panel-card rounded-2xl p-6 animate-fade-in-up delay-5" style="background:var(--bg-card);border:1px solid var(--border-glass);box-shadow:var(--shadow-sm);">
-            <h2 class="text-sm font-bold uppercase tracking-wider mb-4 inline-flex items-center gap-2" style="color:var(--text-muted);"><i class="ri-flashlight-line"></i> Quick Actions</h2>
+          <div
+            class="panel-card rounded-2xl p-6 animate-fade-in-up delay-5"
+            style="
+              background: var(--bg-card);
+              border: 1px solid var(--border-glass);
+              box-shadow: var(--shadow-sm);
+            "
+          >
+            <h2
+              class="text-sm font-bold uppercase tracking-wider mb-4 inline-flex items-center gap-2"
+              style="color: var(--text-muted)"
+            >
+              <i class="ri-flashlight-line"></i> Quick Actions
+            </h2>
             <div class="flex flex-col gap-3">
               <a href="investor_pages/browse_startups.html" class="action-tile">
-                <span class="action-tile__icon text-indigo-500"><i class="ri-search-line"></i></span>
-                <div class="action-tile__copy"><strong>Browse Startups</strong><span>Find new opportunities</span></div>
+                <span class="action-tile__icon text-indigo-500"
+                  ><i class="ri-search-line"></i
+                ></span>
+                <div class="action-tile__copy">
+                  <strong>Browse Startups</strong
+                  ><span>Find new opportunities</span>
+                </div>
               </a>
               <a href="investor_pages/invest.html" class="action-tile">
-                <span class="action-tile__icon text-emerald-500"><i class="ri-coins-line"></i></span>
-                <div class="action-tile__copy"><strong>Make Investment</strong><span>Invest in a round</span></div>
+                <span class="action-tile__icon text-emerald-500"
+                  ><i class="ri-coins-line"></i
+                ></span>
+                <div class="action-tile__copy">
+                  <strong>Make Investment</strong><span>Invest in a round</span>
+                </div>
               </a>
               <a href="investor_pages/my_investments.html" class="action-tile">
-                <span class="action-tile__icon text-violet-500"><i class="ri-bar-chart-grouped-line"></i></span>
-                <div class="action-tile__copy"><strong>My Investments</strong><span>Track your portfolio</span></div>
+                <span class="action-tile__icon text-violet-500"
+                  ><i class="ri-bar-chart-grouped-line"></i
+                ></span>
+                <div class="action-tile__copy">
+                  <strong>My Investments</strong
+                  ><span>Track your portfolio</span>
+                </div>
               </a>
             </div>
           </div>
@@ -109,7 +282,13 @@
     </div>
 
     <script>
-      document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+      document.getElementById("dateDisplay").textContent =
+        new Date().toLocaleDateString("en-IN", {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
 
       let chart;
       const user_id = localStorage.getItem("user_id");
@@ -117,63 +296,142 @@
 
       async function ensureInvestor() {
         const user_id = localStorage.getItem("user_id");
-        const res = await fetch(`http://localhost:5000/getInvestor/${user_id}`);
+        const res = await fetch(
+          `https://startup-funding-investment-tracking.onrender.com/getInvestor/${user_id}`,
+        );
         const data = await res.json();
-        if (data.investor_id) { localStorage.setItem("investor_id", data.investor_id); }
+        if (data.investor_id) {
+          localStorage.setItem("investor_id", data.investor_id);
+        }
       }
 
       async function loadDashboard() {
         try {
           const investor_id = localStorage.getItem("investor_id");
-          if (!investor_id) { document.getElementById("totalInvested").innerText = "₹0"; document.getElementById("totalStartups").innerText = "0"; document.getElementById("totalEquity").innerText = "0%"; return; }
-          const res = await fetch(`http://localhost:5000/investorSummary/${investor_id}`);
+          if (!investor_id) {
+            document.getElementById("totalInvested").innerText = "₹0";
+            document.getElementById("totalStartups").innerText = "0";
+            document.getElementById("totalEquity").innerText = "0%";
+            return;
+          }
+          const res = await fetch(
+            `https://startup-funding-investment-tracking.onrender.com/investorSummary/${investor_id}`,
+          );
           const data = await res.json();
-          document.getElementById("totalInvested").innerText = "₹" + Number(data.total_invested || 0).toLocaleString();
-          document.getElementById("totalStartups").innerText = data.total_startups || 0;
-          document.getElementById("totalEquity").innerText = Number(data.total_equity || 0).toFixed(2) + "%";
-        } catch (err) { console.error("Dashboard error:", err); }
+          document.getElementById("totalInvested").innerText =
+            "₹" + Number(data.total_invested || 0).toLocaleString();
+          document.getElementById("totalStartups").innerText =
+            data.total_startups || 0;
+          document.getElementById("totalEquity").innerText =
+            Number(data.total_equity || 0).toFixed(2) + "%";
+        } catch (err) {
+          console.error("Dashboard error:", err);
+        }
       }
 
       async function loadChart() {
         try {
           const investor_id = localStorage.getItem("investor_id");
-          const res = await fetch(`http://localhost:5000/myInvestments/${investor_id}`);
+          const res = await fetch(
+            `https://startup-funding-investment-tracking.onrender.com/myInvestments/${investor_id}`,
+          );
           const data = await res.json();
           const grouped = {};
-          data.forEach((i) => { if (!grouped[i.startup_name]) grouped[i.startup_name] = 0; grouped[i.startup_name] += Number(i.amount_invested); });
+          data.forEach((i) => {
+            if (!grouped[i.startup_name]) grouped[i.startup_name] = 0;
+            grouped[i.startup_name] += Number(i.amount_invested);
+          });
           const labels = Object.keys(grouped);
           const values = Object.values(grouped);
-          if (labels.length === 0) { document.getElementById("investmentChart").parentElement.querySelector('canvas').outerHTML = "<p class='text-center py-8' style='color:var(--text-muted);'>No investments yet — browse startups to get started!</p>"; return; }
+          if (labels.length === 0) {
+            document
+              .getElementById("investmentChart")
+              .parentElement.querySelector("canvas").outerHTML =
+              "<p class='text-center py-8' style='color:var(--text-muted);'>No investments yet — browse startups to get started!</p>";
+            return;
+          }
           const ctx = document.getElementById("investmentChart");
           if (chart) chart.destroy();
           chart = new Chart(ctx, {
             type: "doughnut",
-            data: { labels, datasets: [{ data: values, backgroundColor: ["#10b981","#6366f1","#f59e0b","#ef4444","#8b5cf6","#0d9488","#ec4899"], borderWidth: 0, borderRadius: 4 }] },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, font: { family: 'Inter', size: 12 } } } }, cutout: '60%' }
+            data: {
+              labels,
+              datasets: [
+                {
+                  data: values,
+                  backgroundColor: [
+                    "#10b981",
+                    "#6366f1",
+                    "#f59e0b",
+                    "#ef4444",
+                    "#8b5cf6",
+                    "#0d9488",
+                    "#ec4899",
+                  ],
+                  borderWidth: 0,
+                  borderRadius: 4,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: {
+                    padding: 16,
+                    usePointStyle: true,
+                    font: { family: "Inter", size: 12 },
+                  },
+                },
+              },
+              cutout: "60%",
+            },
           });
-        } catch (err) { console.error("Chart error:", err); }
+        } catch (err) {
+          console.error("Chart error:", err);
+        }
       }
 
-      (async () => { await ensureInvestor(); await loadDashboard(); await loadChart(); })();
+      (async () => {
+        await ensureInvestor();
+        await loadDashboard();
+        await loadChart();
+      })();
     </script>
-  <script>
-(function() {
-  var name = localStorage.getItem("username") || "User";
-  var role = localStorage.getItem("role") || "Member";
-  var initials = name.split(" ").map(function(w){return w[0]||"";}).join("").slice(0,2).toUpperCase();
-  var brand = document.querySelector(".sidebar-brand");
-  if (brand) {
-    var chip = document.createElement("div");
-    chip.className = "sidebar-user-chip";
-    chip.innerHTML = "<div class=\"sidebar-user-avatar\">" + initials + "</div><div class=\"sidebar-user-info\"><div class=\"sidebar-user-name\">" + name + "</div><div class=\"sidebar-user-role\">" + role + "</div></div>";
-    var title = brand.querySelector(".sidebar-title");
-    if (title && title.nextSibling) {
-      brand.insertBefore(chip, title.nextSibling);
-    } else {
-      brand.appendChild(chip);
-    }
-  }
-})();
-</script>
-</body>
+    <script>
+      (function () {
+        var name = localStorage.getItem("username") || "User";
+        var role = localStorage.getItem("role") || "Member";
+        var initials = name
+          .split(" ")
+          .map(function (w) {
+            return w[0] || "";
+          })
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        var brand = document.querySelector(".sidebar-brand");
+        if (brand) {
+          var chip = document.createElement("div");
+          chip.className = "sidebar-user-chip";
+          chip.innerHTML =
+            '<div class="sidebar-user-avatar">' +
+            initials +
+            '</div><div class="sidebar-user-info"><div class="sidebar-user-name">' +
+            name +
+            '</div><div class="sidebar-user-role">' +
+            role +
+            "</div></div>";
+          var title = brand.querySelector(".sidebar-title");
+          if (title && title.nextSibling) {
+            brand.insertBefore(chip, title.nextSibling);
+          } else {
+            brand.appendChild(chip);
+          }
+        }
+      })();
+    </script>
+  </body>
 </html>

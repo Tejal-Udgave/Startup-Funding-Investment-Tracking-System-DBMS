@@ -93,7 +93,7 @@
         const user_id = localStorage.getItem("user_id");
         if (!investor_id && user_id) {
           const res = await fetch(
-            `http://localhost:5000/getInvestor/${user_id}`,
+            `https://startup-funding-investment-tracking.onrender.com/getInvestor/${user_id}`,
           );
           const data = await res.json();
           if (data.investor_id)
@@ -109,7 +109,7 @@
           return;
         }
         const res = await fetch(
-          `http://localhost:5000/myInvestments/${investor_id}`,
+          `https://startup-funding-investment-tracking.onrender.com/myInvestments/${investor_id}`,
         );
         const data = await res.json();
         const table = document.getElementById("table");
@@ -126,7 +126,7 @@
       function downloadReceipt(investmentId) {
         if (!investmentId) return;
         window.open(
-          `http://localhost:5000/investmentReceipt/${investmentId}`,
+          `https://startup-funding-investment-tracking.onrender.com/investmentReceipt/${investmentId}`,
           "_blank",
         );
       }

@@ -426,9 +426,15 @@
 
         try {
           const [profileRes, dashboardRes, healthRes] = await Promise.all([
-            fetch(`http://localhost:5000/startupProfile/${startupId}`),
-            fetch(`http://localhost:5000/startupDashboard/${startupId}`),
-            fetch(`http://localhost:5000/startupHealth/${startupId}`),
+            fetch(
+              `https://startup-funding-investment-tracking.onrender.com/startupProfile/${startupId}`,
+            ),
+            fetch(
+              `https://startup-funding-investment-tracking.onrender.com/startupDashboard/${startupId}`,
+            ),
+            fetch(
+              `https://startup-funding-investment-tracking.onrender.com/startupHealth/${startupId}`,
+            ),
           ]);
 
           const profile = await profileRes.json();

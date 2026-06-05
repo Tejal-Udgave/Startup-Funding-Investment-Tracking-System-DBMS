@@ -151,11 +151,14 @@
           const firm = document.getElementById("firm").value;
           const type = document.getElementById("type").value;
           const country = document.getElementById("country").value;
-          const res = await fetch("http://localhost:5000/addInvestor", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, firm, type, country }),
-          });
+          const res = await fetch(
+            "https://startup-funding-investment-tracking.onrender.com/addInvestor",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ name, firm, type, country }),
+            },
+          );
           if (res.ok) {
             showToast("Investor added!", "success");
             document.getElementById("investorForm").reset();
@@ -166,7 +169,9 @@
         });
 
       async function loadInvestors() {
-        const res = await fetch("http://localhost:5000/investors");
+        const res = await fetch(
+          "https://startup-funding-investment-tracking.onrender.com/investors",
+        );
         const data = await res.json();
         const table = document.getElementById("investorTable");
         table.innerHTML = "";
