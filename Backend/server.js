@@ -76,17 +76,17 @@ db.connect((err) => {
   );
   console.log("Checkpoint B");
   function ensureStartupProfileTable() {
-    db.query("SHOW TABLES LIKE 'STARTUP_PROFILE'", (err, result) => {
+    db.query("SHOW TABLES LIKE 'startup_profile'", (err, result) => {
       if (err) {
         return console.warn(
-          "Unable to inspect STARTUP_PROFILE table:",
+          "Unable to inspect startup_profile table:",
           err.sqlMessage || err.message,
         );
       }
 
       if (!result || result.length === 0) {
         db.query(
-          `CREATE TABLE STARTUP_PROFILE (
+          `CREATE TABLE startup_profile (
              profile_id VARCHAR(10) PRIMARY KEY,
              startup_id VARCHAR(10) NOT NULL,
              description TEXT,
@@ -111,36 +111,36 @@ db.connect((err) => {
           (createErr) => {
             if (createErr) {
               return console.error(
-                "Failed to create STARTUP_PROFILE table:",
+                "Failed to create startup_profile table:",
                 createErr.sqlMessage || createErr.message,
               );
             }
-            console.log("Created STARTUP_PROFILE table");
+            console.log("Created startup_profile table");
           },
         );
         return;
       }
 
       db.query(
-        "SHOW INDEX FROM STARTUP_PROFILE WHERE Key_name = 'ux_startup_profile_startup_id'",
+        "SHOW INDEX FROM startup_profile WHERE Key_name = 'ux_startup_profile_startup_id'",
         (indexErr, indexRes) => {
           if (indexErr) {
             return console.warn(
-              "Unable to inspect STARTUP_PROFILE indexes:",
+              "Unable to inspect startup_profile indexes:",
               indexErr.sqlMessage || indexErr.message,
             );
           }
           if (!indexRes || indexRes.length === 0) {
             db.query(
-              "ALTER TABLE STARTUP_PROFILE ADD UNIQUE KEY ux_startup_profile_startup_id (startup_id)",
+              "ALTER TABLE startup_profile ADD UNIQUE KEY ux_startup_profile_startup_id (startup_id)",
               (alterErr) => {
                 if (alterErr) {
                   return console.error(
-                    "Failed to add unique index to STARTUP_PROFILE.startup_id:",
+                    "Failed to add unique index to startup_profile.startup_id:",
                     alterErr.sqlMessage || alterErr.message,
                   );
                 }
-                console.log("Added unique index to STARTUP_PROFILE.startup_id");
+                console.log("Added unique index to startup_profile.startup_id");
               },
             );
           }
@@ -152,18 +152,18 @@ db.connect((err) => {
   ensureStartupProfileTable();
   console.log("Checkpoint C");
 
-  // Seed INDUSTRY table if empty///////////////////////
+  // Seed industry table if empty///////////////////////
   db.query("SELECT COUNT(*) AS cnt FROM industry", (err, res) => {
     if (err)
-      return console.warn("Could not check INDUSTRY table:", err.message);
+      return console.warn("Could not check industry table:", err.message);
     if (res[0].cnt === 0) {
       db.query(
-        `INSERT IGNORE INTO INDUSTRY (industry_id, industry_name) VALUES
+        `INSERT IGNORE INTO industry (industry_id, industry_name) VALUES
          ('I001','FinTech'),('I002','HealthTech'),('I003','EdTech')`,
         (insertErr) => {
           if (insertErr)
             return console.error("Industry seed failed:", insertErr.message);
-          console.log("Seeded INDUSTRY table");
+          console.log("Seeded industry table");
         },
       );
     }
@@ -202,7 +202,7 @@ db.connect((err) => {
     }
 
     db.query(
-      "INSERT INTO USERS (username, email, password, role) VALUES (?, ?, ?, ?)",
+      "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)",
       [username, email, password, role],
       (err) => {
         if (err) return res.status(500).send(err.sqlMessage);
@@ -220,13 +220,16 @@ db.connect((err) => {
 
     db.query(
       `SELECT u.*, i.investor_id
-     FROM USERS u
-     LEFT JOIN INVESTOR i ON u.user_id = i.user_id
+     FROM users u
+     LEFT JOIN investor i ON u.user_id = i.user_id
      WHERE u.email = ? AND u.password = ?`,
       [email, password],
       (err, result) => {
-        if (err) return res.status(500).send(err.sqlMessage || "Login failed");
-
+        // if (err) return res.status(500).send(err.sqlMessage || "Login failed");
+        if (err) {
+          console.log("LOGIN ERROR:", err);
+          return res.status(500).send(err.sqlMessage || "Login failed");
+        }
         if (result.length === 0) return res.status(401).send("Invalid");
 
         const user = result[0];
@@ -345,7 +348,7 @@ db.connect((err) => {
       return res.status(400).send("startup_id is required");
     }
 
-    const query = `INSERT INTO STARTUP_PROFILE
+    const query = `INSERT INTO startup_profile
       (profile_id, startup_id, description, problem_statement, target_market, business_model,
        product_name, product_category, current_version, product_price, launch_date,
        features, market_size, competitors, current_customers, monthly_revenue, future_roadmap)
@@ -398,7 +401,7 @@ db.connect((err) => {
   app.get("/startupProfile/:startup_id", (req, res) => {
     const startup_id = req.params.startup_id;
     db.query(
-      "SELECT * FROM STARTUP_PROFILE WHERE startup_id = ? LIMIT 1",
+      "SELECT * FROM startup_profile WHERE startup_id = ? LIMIT 1",
       [startup_id],
       (err, result) => {
         if (err) return res.status(500).send(err.sqlMessage);
@@ -413,23 +416,23 @@ db.connect((err) => {
     db.query(
       `SELECT
          (SELECT COALESCE(SUM(i.amount_invested), 0)
-          FROM INVESTMENT i
-          JOIN FUNDING_ROUND fr ON i.round_id = fr.round_id
+          FROM investment i
+          JOIN funding_round fr ON i.round_id = fr.round_id
           WHERE fr.startup_id = s.startup_id) AS total_funding,
          (SELECT COALESCE(SUM(fr.total_amount_raised), 0)
-          FROM FUNDING_ROUND fr
+          FROM funding_round fr
           WHERE fr.startup_id = s.startup_id
             AND fr.total_amount_raised > 0) AS target_funding,
          (SELECT COUNT(DISTINCT i.investor_id)
-          FROM INVESTMENT i
-          JOIN FUNDING_ROUND fr ON i.round_id = fr.round_id
+          FROM investment i
+          JOIN funding_round fr ON i.round_id = fr.round_id
           WHERE fr.startup_id = s.startup_id) AS investor_count,
          (SELECT sp.current_customers
-          FROM STARTUP_PROFILE sp
+          FROM startup_profile sp
           WHERE sp.startup_id = s.startup_id
           LIMIT 1) AS current_customers,
          (SELECT sp.monthly_revenue
-          FROM STARTUP_PROFILE sp
+          FROM startup_profile sp
           WHERE sp.startup_id = s.startup_id
           LIMIT 1) AS monthly_revenue
        FROM startup s
@@ -492,8 +495,8 @@ db.connect((err) => {
     db.query(
       `SELECT DISTINCT s.*
      FROM startup s
-     LEFT JOIN FOUNDER f ON s.startup_id = f.startup_id
-     LEFT JOIN USERS u2 ON TRIM(LOWER(u2.email)) = TRIM(LOWER(f.founder_email))
+     LEFT JOIN founder f ON s.startup_id = f.startup_id
+     LEFT JOIN users u2 ON TRIM(LOWER(u2.email)) = TRIM(LOWER(f.founder_email))
      WHERE s.user_id = ? OR f.user_id = ? OR u2.user_id = ?`,
       [req.params.user_id, req.params.user_id, req.params.user_id],
       (err, result) => {
@@ -548,7 +551,7 @@ db.connect((err) => {
 
           // ≡ƒöÑ STEP 1: GET OR CREATE ROUND (ONLY ONCE)
           db.query(
-            "SELECT round_id FROM FUNDING_ROUND WHERE startup_id=? ORDER BY round_date DESC LIMIT 1",
+            "SELECT round_id FROM funding_round WHERE startup_id=? ORDER BY round_date DESC LIMIT 1",
             [startup_id],
             (err, roundRes) => {
               if (err) return res.status(500).send(err.sqlMessage);
@@ -559,7 +562,7 @@ db.connect((err) => {
                 round_id = generateId("R");
 
                 //     db.query(
-                //       `INSERT INTO FUNDING_ROUND
+                //       `INSERT INTO funding_round
                 //  (round_id, round_type, round_date, valuation, total_amount_raised, startup_id)
                 //  VALUES (?, 'Initial', CURDATE(), 0, 0, ?)`,
                 //       [round_id, startup_id],
@@ -580,7 +583,7 @@ db.connect((err) => {
                     const initialRoundDate = `${foundedYear}-01-01`;
 
                     db.query(
-                      `INSERT INTO FUNDING_ROUND
+                      `INSERT INTO funding_round
        (round_id, round_type, round_date, valuation, total_amount_raised, startup_id)
        VALUES (?, 'Initial', ?, 0, 0, ?)`,
                       [round_id, initialRoundDate, startup_id],
@@ -607,7 +610,7 @@ db.connect((err) => {
                   // Link the founder to an existing user account by email so the co-founder
                   // can see the startup when they log in.
                   db.query(
-                    "SELECT user_id FROM USERS WHERE TRIM(LOWER(email)) = TRIM(LOWER(?))",
+                    "SELECT user_id FROM users WHERE TRIM(LOWER(email)) = TRIM(LOWER(?))",
                     [f.email],
                     (err1, userRes) => {
                       if (err1) return res.status(500).send(err1.sqlMessage);
@@ -633,9 +636,9 @@ db.connect((err) => {
                           if (err2)
                             return res.status(500).send(err2.sqlMessage);
 
-                          // Γ£à insert into EQUITY_HISTORY (FIXED)
+                          // Γ£à insert into equity_history (FIXED)
                           db.query(
-                            `INSERT INTO EQUITY_HISTORY
+                            `INSERT INTO equity_history
                        (ownership_id, startup_id, round_id, stakeholder_type, stakeholder_id, equity_percentage, recorded_at)
                        VALUES (?, ?, ?, 'Founder', ?, ?, ?)`,
                             [
@@ -694,15 +697,15 @@ db.connect((err) => {
     db.query(
       `SELECT DISTINCT f.*, s.startup_name, COALESCE(u.email, f.founder_email) AS founder_email
      FROM founder f
-     JOIN STARTUP s ON f.startup_id = s.startup_id
-     LEFT JOIN USERS u ON f.user_id = u.user_id
-     LEFT JOIN USERS u2 ON TRIM(LOWER(u2.email)) = TRIM(LOWER(f.founder_email))
+     JOIN startup s ON f.startup_id = s.startup_id
+     LEFT JOIN users u ON f.user_id = u.user_id
+     LEFT JOIN users u2 ON TRIM(LOWER(u2.email)) = TRIM(LOWER(f.founder_email))
      WHERE s.user_id = ?
        OR f.user_id = ?
        OR u2.user_id = ?
        OR f.startup_id IN (
             SELECT f2.startup_id FROM founder f2
-            LEFT JOIN USERS u3 ON TRIM(LOWER(u3.email)) = TRIM(LOWER(f2.founder_email))
+            LEFT JOIN users u3 ON TRIM(LOWER(u3.email)) = TRIM(LOWER(f2.founder_email))
             WHERE f2.user_id = ? OR u3.user_id = ?
           )`,
       [uid, uid, uid, uid, uid],
@@ -735,7 +738,7 @@ db.connect((err) => {
     }
     const round_id = generateId("R");
     db.query(
-      `INSERT INTO FUNDING_ROUND VALUES (?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO funding_round VALUES (?, ?, ?, ?, ?, ?)`,
       [
         round_id,
         round_type,
@@ -756,7 +759,7 @@ db.connect((err) => {
     const { round_type, round_date, valuation, total_amount_raised } = req.body;
 
     db.query(
-      `UPDATE FUNDING_ROUND
+      `UPDATE funding_round
      SET round_type = ?,
          round_date = ?,
          valuation = ?,
@@ -782,10 +785,10 @@ db.connect((err) => {
     const uid = req.params.user_id;
     db.query(
       `SELECT DISTINCT fr.*, s.startup_name
-     FROM FUNDING_ROUND fr
-     JOIN STARTUP s ON fr.startup_id = s.startup_id
-     LEFT JOIN FOUNDER f ON s.startup_id = f.startup_id
-     LEFT JOIN USERS u2 ON TRIM(LOWER(u2.email)) = TRIM(LOWER(f.founder_email))
+     FROM funding_round fr
+     JOIN startup s ON fr.startup_id = s.startup_id
+     LEFT JOIN founder f ON s.startup_id = f.startup_id
+     LEFT JOIN users u2 ON TRIM(LOWER(u2.email)) = TRIM(LOWER(f.founder_email))
      WHERE s.user_id = ? OR f.user_id = ? OR u2.user_id = ?`,
       [uid, uid, uid],
       (err, result) => {
@@ -829,12 +832,12 @@ db.connect((err) => {
       fr.round_type,
       i.amount_invested,
       i.equity_acquired
-     FROM INVESTMENT i
-     JOIN INVESTOR inv ON i.investor_id = inv.investor_id
-     JOIN FUNDING_ROUND fr ON i.round_id = fr.round_id
-     JOIN STARTUP s ON fr.startup_id = s.startup_id
-     LEFT JOIN FOUNDER f ON s.startup_id = f.startup_id
-     LEFT JOIN USERS u2 ON TRIM(LOWER(u2.email)) = TRIM(LOWER(f.founder_email))
+     FROM investment i
+     JOIN investor inv ON i.investor_id = inv.investor_id
+     JOIN funding_round fr ON i.round_id = fr.round_id
+     JOIN startup s ON fr.startup_id = s.startup_id
+     LEFT JOIN founder f ON s.startup_id = f.startup_id
+     LEFT JOIN users u2 ON TRIM(LOWER(u2.email)) = TRIM(LOWER(f.founder_email))
      WHERE s.user_id = ? OR f.user_id = ? OR u2.user_id = ?`,
       [req.params.user_id, req.params.user_id, req.params.user_id],
       (err, result) => {
@@ -844,7 +847,7 @@ db.connect((err) => {
     );
   });
 
-  // ================= INVESTMENT =================
+  // ================= investment =================
   app.post("/addInvestment", (req, res) => {
     const {
       round_id,
@@ -897,7 +900,7 @@ db.connect((err) => {
         function processInvestment() {
           // Get round info and startup_id
           db.query(
-            "SELECT fr.startup_id, fr.round_id FROM FUNDING_ROUND fr WHERE fr.round_id = ?",
+            "SELECT fr.startup_id, fr.round_id FROM funding_round fr WHERE fr.round_id = ?",
             [round_id],
             (roundErr, roundRes) => {
               if (roundErr) return res.status(500).send(roundErr.sqlMessage);
@@ -919,7 +922,7 @@ db.connect((err) => {
                         PARTITION BY stakeholder_id, stakeholder_type
                         ORDER BY recorded_at DESC
                       ) AS rn
-                    FROM EQUITY_HISTORY
+                    FROM equity_history
                     WHERE startup_id = ?
                   ) latest
                   WHERE rn = 1`,
@@ -931,7 +934,7 @@ db.connect((err) => {
                     if (lastData.length === 0) {
                       // No existing holders, just insert investor equity
                       db.query(
-                        `INSERT INTO EQUITY_HISTORY 
+                        `INSERT INTO equity_history 
                        (ownership_id, startup_id, round_id, stakeholder_type, stakeholder_id, equity_percentage, recorded_at)
                        VALUES (?, ?, ?, 'Investor', ?, ?, ?)`,
                         [
@@ -968,7 +971,7 @@ db.connect((err) => {
                       }
 
                       db.query(
-                        `INSERT INTO EQUITY_HISTORY 
+                        `INSERT INTO equity_history 
                        (ownership_id, startup_id, round_id, stakeholder_type, stakeholder_id, equity_percentage, recorded_at)
                        VALUES (?, ?, ?, ?, ?, ?, ?)`,
                         [
@@ -998,7 +1001,7 @@ db.connect((err) => {
 
                     function insertInvestorHistory(callback) {
                       db.query(
-                        `INSERT INTO EQUITY_HISTORY 
+                        `INSERT INTO equity_history 
                        (ownership_id, startup_id, round_id, stakeholder_type, stakeholder_id, equity_percentage, recorded_at)
                        VALUES (?, ?, ?, 'Investor', ?, ?, ?)`,
                         [
@@ -1023,7 +1026,7 @@ db.connect((err) => {
         function insertInvestment() {
           const investment_id = generateId("IV");
           db.query(
-            `INSERT INTO INVESTMENT 
+            `INSERT INTO investment 
            (investment_id, round_id, investor_id, amount_invested, equity_acquired)
            VALUES (?, ?, ?, ?, ?)`,
             [investment_id, round_id, investor_id, amount, equity],
@@ -1069,10 +1072,10 @@ db.connect((err) => {
       (SELECT GROUP_CONCAT(f.founder_name SEPARATOR ', ')
  FROM founder f
  WHERE f.startup_id = s.startup_id) AS founder_name
-     FROM INVESTMENT i
-     JOIN FUNDING_ROUND fr ON i.round_id = fr.round_id
-     JOIN STARTUP s ON fr.startup_id = s.startup_id
-     JOIN INVESTOR inv ON i.investor_id = inv.investor_id
+     FROM investment i
+     JOIN funding_round fr ON i.round_id = fr.round_id
+     JOIN startup s ON fr.startup_id = s.startup_id
+     JOIN investor inv ON i.investor_id = inv.investor_id
      WHERE i.investment_id = ?
      LIMIT 1`,
       [investment_id],
@@ -1088,7 +1091,7 @@ db.connect((err) => {
             PARTITION BY stakeholder_id, stakeholder_type
             ORDER BY recorded_at DESC
           ) AS rn
-          FROM EQUITY_HISTORY
+          FROM equity_history
           WHERE startup_id = ?
         ) t
         WHERE rn = 1
@@ -1147,7 +1150,7 @@ db.connect((err) => {
               .fillColor("#111827")
               .fontSize(18)
               .font("Helvetica-Bold")
-              .text("INVESTMENT CERTIFICATE", { align: "center" });
+              .text("investment CERTIFICATE", { align: "center" });
 
             doc
               .fontSize(10)
@@ -1323,25 +1326,25 @@ db.connect((err) => {
        s.country,
        COALESCE(round_summary.amount_raised, 0)   AS amount_raised,
        COALESCE(startup_summary.investor_count, 0) AS investor_count
-     FROM FUNDING_ROUND fr
-     JOIN STARTUP s ON fr.startup_id = s.startup_id
+     FROM funding_round fr
+     JOIN startup s ON fr.startup_id = s.startup_id
      JOIN (
        SELECT startup_id, MAX(round_date) AS max_date
-       FROM FUNDING_ROUND
+       FROM funding_round
        GROUP BY startup_id
      ) latest ON fr.startup_id = latest.startup_id
        AND fr.round_date = latest.max_date
      LEFT JOIN (
        SELECT i.round_id,
               SUM(i.amount_invested)       AS amount_raised
-       FROM INVESTMENT i
+       FROM investment i
        GROUP BY i.round_id
      ) round_summary ON round_summary.round_id = fr.round_id
      LEFT JOIN (
        SELECT fr.startup_id,
               COUNT(DISTINCT i.investor_id) AS investor_count
-       FROM INVESTMENT i
-       JOIN FUNDING_ROUND fr ON i.round_id = fr.round_id
+       FROM investment i
+       JOIN funding_round fr ON i.round_id = fr.round_id
        GROUP BY fr.startup_id
      ) startup_summary ON startup_summary.startup_id = s.startup_id
      ORDER BY s.startup_name`,
@@ -1376,11 +1379,11 @@ db.connect((err) => {
           PARTITION BY stakeholder_id, stakeholder_type
           ORDER BY recorded_at DESC
         ) AS rn
-      FROM EQUITY_HISTORY
+      FROM equity_history
       WHERE startup_id=?
     ) eh
-    LEFT JOIN FOUNDER f ON eh.stakeholder_id = f.founder_id
-    LEFT JOIN INVESTOR i ON eh.stakeholder_id = i.investor_id
+    LEFT JOIN founder f ON eh.stakeholder_id = f.founder_id
+    LEFT JOIN investor i ON eh.stakeholder_id = i.investor_id
     WHERE eh.rn = 1
     GROUP BY stakeholder, eh.stakeholder_type, stakeholder_label`,
       [startup_id],
@@ -1394,7 +1397,7 @@ db.connect((err) => {
   app.get("/history/:startup_id", (req, res) => {
     const startup_id = req.params.startup_id;
 
-    // Build history FROM founder and INVESTMENT with proper dilution calculation
+    // Build history FROM founder and investment with proper dilution calculation
     db.query(
       `SELECT 
       f.founder_id,
@@ -1412,9 +1415,9 @@ db.connect((err) => {
           i.investor_id,
           inv.investor_name,
           i.equity_acquired
-         FROM INVESTMENT i
-         JOIN FUNDING_ROUND fr ON i.round_id = fr.round_id
-         JOIN INVESTOR inv ON i.investor_id = inv.investor_id
+         FROM investment i
+         JOIN funding_round fr ON i.round_id = fr.round_id
+         JOIN investor inv ON i.investor_id = inv.investor_id
          WHERE fr.startup_id = ?
          ORDER BY fr.round_date ASC`,
           [startup_id],
@@ -1542,7 +1545,7 @@ db.connect((err) => {
     );
   });
 
-  // ================= GET INVESTOR =================
+  // ================= GET investor =================
   app.get("/getInvestor/:user_id", (req, res) => {
     db.query(
       "SELECT investor_id FROM investor WHERE user_id=?",
@@ -1569,9 +1572,9 @@ db.connect((err) => {
       fr.round_type,
       i.amount_invested,
       i.equity_acquired
-     FROM INVESTMENT i
-     JOIN FUNDING_ROUND fr ON i.round_id = fr.round_id
-     JOIN STARTUP s ON fr.startup_id = s.startup_id
+     FROM investment i
+     JOIN funding_round fr ON i.round_id = fr.round_id
+     JOIN startup s ON fr.startup_id = s.startup_id
      WHERE i.investor_id = ?`,
       [req.params.investor_id],
       (err, result) => {
@@ -1580,15 +1583,15 @@ db.connect((err) => {
       },
     );
   });
-  // ================= INVESTOR SUMMARY =================
+  // ================= investor SUMMARY =================
   app.get("/investorSummary/:investor_id", (req, res) => {
     db.query(
       `SELECT 
       SUM(amount_invested) AS total_invested,
       COUNT(DISTINCT fr.startup_id) AS total_startups,
       SUM(equity_acquired) AS total_equity
-     FROM INVESTMENT i
-     JOIN FUNDING_ROUND fr ON i.round_id = fr.round_id
+     FROM investment i
+     JOIN funding_round fr ON i.round_id = fr.round_id
      WHERE i.investor_id = ?`,
       [req.params.investor_id],
       (err, result) => {
@@ -1615,7 +1618,7 @@ db.connect((err) => {
 
       -- latest round
       (SELECT fr.round_type 
-      FROM FUNDING_ROUND fr 
+      FROM funding_round fr 
       WHERE fr.startup_id = s.startup_id 
       AND fr.round_type != 'Initial'
       ORDER BY fr.round_date DESC 
@@ -1623,7 +1626,7 @@ db.connect((err) => {
 
       -- latest valuation
       (SELECT fr.valuation 
-      FROM FUNDING_ROUND fr 
+      FROM funding_round fr 
       WHERE fr.startup_id = s.startup_id 
       AND fr.valuation > 0
       ORDER BY fr.round_date DESC 
@@ -1631,21 +1634,21 @@ db.connect((err) => {
 
       -- Γ£à CORRECT total funding
       (SELECT COALESCE(SUM(i.amount_invested),0)
-      FROM INVESTMENT i
-      JOIN FUNDING_ROUND fr ON i.round_id = fr.round_id
+      FROM investment i
+      JOIN funding_round fr ON i.round_id = fr.round_id
       WHERE fr.startup_id = s.startup_id
       ) AS total_funding,
 
       (SELECT COALESCE(SUM(fr.total_amount_raised),0)
-      FROM FUNDING_ROUND fr
+      FROM funding_round fr
       WHERE fr.startup_id = s.startup_id
       AND fr.total_amount_raised > 0
       ) AS target_funding,
 
       -- Γ£à CORRECT total investors
       (SELECT COUNT(DISTINCT i.investor_id)
-      FROM INVESTMENT i
-      JOIN FUNDING_ROUND fr ON i.round_id = fr.round_id
+      FROM investment i
+      JOIN funding_round fr ON i.round_id = fr.round_id
       WHERE fr.startup_id = s.startup_id
       ) AS total_investors,
 
@@ -1660,7 +1663,7 @@ db.connect((err) => {
                 PARTITION BY stakeholder_id
                 ORDER BY recorded_at DESC
               ) as rn
-        FROM EQUITY_HISTORY
+        FROM equity_history
         WHERE startup_id = s.startup_id
       ) t
       WHERE rn = 1 AND stakeholder_type = 'Founder'
